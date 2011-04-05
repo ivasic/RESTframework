@@ -2,7 +2,7 @@
 //  RESTRequest.h
 //
 //  Created by Ivan on 9.3.11..
-//  Copyright 2011 Ivan Vasic ivasic@gmail.com. All rights reserved.
+//  Copyright 2011 Ivan Vasic https://github.com/ivasic/RESTframework. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>

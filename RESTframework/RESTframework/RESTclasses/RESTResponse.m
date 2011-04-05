@@ -2,7 +2,7 @@
 //  RESTResponse.m
 //
 //  Created by Ivan on 9.3.11..
-//  Copyright 2011 Ivan Vasic ivasic@gmail.com. All rights reserved.
+//  Copyright 2011 Ivan Vasic https://github.com/ivasic/RESTframework. All rights reserved.
 //
 
 #import "RESTResponse.h"
@@ -28,12 +28,22 @@
 
 -(NSDictionary*) dictionaryValue {
 	//possible minor performance improvement - cache the last conversion until the stringValue changes...
-	return [[self stringValue] objectFromJSONString];
+	id val = [[self stringValue] objectFromJSONString];
+	if ([val isKindOfClass:[NSDictionary class]]) {
+		return val;
+	}
+	
+	return nil;
 }
 
 -(NSArray*) arrayValue {
 	//possible minor performance improvement - cache the last conversion until the stringValue changes...
-	return [[self stringValue] objectFromJSONString];
+	id val = [[self stringValue] objectFromJSONString];
+	if ([val isKindOfClass:[NSArray class]]) {
+		return val;
+	}
+	
+	return nil;
 }
 
 #pragma mark -

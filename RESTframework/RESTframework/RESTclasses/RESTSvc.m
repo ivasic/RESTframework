@@ -2,7 +2,7 @@
 //  RESTSvc.m
 //
 //  Created by Ivan on 9.3.11..
-//  Copyright 2011 Ivan Vasic ivasic@gmail.com. All rights reserved.
+//  Copyright 2011 Ivan Vasic https://github.com/ivasic/RESTframework. All rights reserved.
 //
 
 #import "RESTSvc.h"
@@ -56,8 +56,10 @@
 	NSLog(@"REST Request: %@", [request resourcePathString]);
 	urlConnection = [[NSURLConnection alloc] initWithRequest:urlRequest delegate:self startImmediately:YES];
 	
-	//TODO: show network activity indicator
-	//[NSObject startLoad];
+	
+	if (self.delegate && [self.delegate respondsToSelector:@selector(restSvc:didStartLoadingRequest:)]) {
+		[self.delegate restSvc:self didStartLoadingRequest:request];
+	}
 }
 
 -(void) continueExecFromQueue
@@ -87,9 +89,6 @@
 	self.currentRequest = nil;
 	[requestsQueue release];
 	requestsQueue = nil;
-	
-	//TODO: hide network activity indicator
-	//[NSObject stopLoad];
 }
 
 -(BOOL) hasRequestWithTag:(NSUInteger)tag
@@ -111,8 +110,6 @@
 #pragma mark NSURLConnection delegate
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
-	//NSLog(@"Did receive response: %@", response);
-	
 	[webData release];
 	webData = [[NSMutableData alloc] init];
 	
@@ -127,9 +124,9 @@
 -(void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
 	assert(webData != nil);
 	[webData appendData:data];
-	//	if (delegate && [(NSObject*) delegate respondsToSelector:@selector(loadingProgress:)]) {
-	//		[delegate loadingProgress:webData.length];
-	//	}
+	if (self.delegate && [self.delegate respondsToSelector:@selector(restSvc:loadedData:)]) {
+		[self.delegate restSvc:self loadedData:[webData length]];
+	}
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
@@ -137,9 +134,6 @@
 	webData = nil;
 	[urlConnection release];
 	urlConnection = nil;
-	
-	//TODO: hide network activity indicator
-	//[NSObject stopLoad];
 	
 	//notify
 	if (self.delegate && [(NSObject*)self.delegate respondsToSelector:@selector(restSvc:didFinishWithResponse:)]) {
@@ -155,9 +149,6 @@
 -(void)connectionDidFinishLoading:(NSURLConnection *)connection {
 	[urlConnection release];
 	urlConnection = nil;
-	
-	//TODO: hide network activity indicator
-	//[NSObject stopLoad];
 	
 	if (self.delegate && [(NSObject*)self.delegate respondsToSelector:@selector(restSvc:didFinishWithResponse:)]) {
 		[self.delegate restSvc:self didFinishWithResponse:[RESTResponse 
