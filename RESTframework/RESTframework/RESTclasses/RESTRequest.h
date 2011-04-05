@@ -40,6 +40,9 @@ typedef enum {
 -(id) initWithType:(RESTRequestType)t resourcePath:(NSArray*)path;
 -(id) initWithType:(RESTRequestType)t resourcePath:(NSArray*)path bodyType:(RESTRequestBodyType)bt;
 
++(id) requestWithType:(RESTRequestType)t resourcePath:(NSArray*)path;
++(id) requestWithType:(RESTRequestType)t resourcePath:(NSArray*)path bodyType:(RESTRequestBodyType)bt;
+
 -(void) addParam:(NSString*)value forKey:(NSString*)key;
 -(void) addFile:(NSData*)data withContentType:(NSString*)ct forKey:(NSString*)key;
 

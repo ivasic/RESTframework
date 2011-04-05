@@ -51,6 +51,16 @@
 	return self;
 }
 
++(id) requestWithType:(RESTRequestType)t resourcePath:(NSArray*)path
+{
+	return [[[RESTRequest alloc] initWithType:t resourcePath:path] autorelease];
+}
+
++(id) requestWithType:(RESTRequestType)t resourcePath:(NSArray*)path bodyType:(RESTRequestBodyType)bt
+{
+	return [[[RESTRequest alloc] initWithType:t resourcePath:path bodyType:bt] autorelease];
+}
+
 -(void) dealloc {
 	self.params = nil;
 	self.files = nil;
