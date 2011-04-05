@@ -1,0 +1,3 @@
+[submodule "RESTframework/RESTframework/JSONKit"]
+	path = RESTframework/RESTframework/JSONKit
+	url = https://github.com/johnezang/JSONKit.git

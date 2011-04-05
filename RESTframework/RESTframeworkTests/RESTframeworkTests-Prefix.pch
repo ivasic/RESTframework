@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'RESTframeworkTests' target in the 'RESTframeworkTests' project
+//
+
+#ifdef __OBJC__
+	#import <UIKit/UIKit.h>
+#endif
