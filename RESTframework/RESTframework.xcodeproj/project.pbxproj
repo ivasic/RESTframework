@@ -67,7 +67,6 @@
 		2C582EE8134B80D9007CAC35 /* RESTSvc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RESTSvc.m; sourceTree = "<group>"; };
 		2C582F13134B822F007CAC35 /* JSONKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONKit.h; sourceTree = "<group>"; };
 		2C582F14134B822F007CAC35 /* JSONKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONKit.m; sourceTree = "<group>"; };
-		2C582F2F134B856E007CAC35 /* RESTConf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RESTConf.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -161,7 +160,6 @@
 		2C582EDD134B802F007CAC35 /* RESTclasses */ = {
 			isa = PBXGroup;
 			children = (
-				2C582F2F134B856E007CAC35 /* RESTConf.h */,
 				2C582EE3134B80D9007CAC35 /* RESTRequest.h */,
 				2C582EE4134B80D9007CAC35 /* RESTRequest.m */,
 				2C582EE5134B80D9007CAC35 /* RESTResponse.h */,
@@ -517,6 +515,7 @@
 				2C582EC3134B7FC3007CAC35 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		2C582EC4134B7FC3007CAC35 /* Build configuration list for PBXNativeTarget "RESTframeworkTests" */ = {
 			isa = XCConfigurationList;
@@ -525,6 +524,7 @@
 				2C582EC6134B7FC3007CAC35 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

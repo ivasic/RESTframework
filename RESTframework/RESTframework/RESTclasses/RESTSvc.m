@@ -20,7 +20,7 @@
 @end
 
 @implementation RESTSvc
-@synthesize delegate, currentRequest, requestsQueue;
+@synthesize delegate, currentRequest, requestsQueue, serviceEndpoint;
 
 #pragma mark - Props
 
@@ -31,6 +31,30 @@
 	}
 	
 	return requestsQueue;
+}
+
+#pragma mark - Initialization
+
+-(id) initWithEndpointURL:(NSURL*)url
+{
+	if ((self = [super init])) {
+		self.serviceEndpoint = url;
+	}
+	
+	return self;
+}
+
+-(void) dealloc {
+	[serviceEndpoint release];
+	serviceEndpoint = nil;
+	[self cancelRequests];//if any...
+	[requestsQueue release];
+	requestsQueue = nil;
+	self.currentRequest = nil;
+	self.delegate = nil;
+	[webData release];
+	[urlConnection release];
+	[super dealloc];
 }
 
 #pragma mark - Execution
@@ -163,18 +187,6 @@
 	//nil it
 	self.currentRequest = nil;
 	[self continueExecFromQueue];
-}
-
-
--(void) dealloc {
-	[self cancelRequests];//if any...
-	[requestsQueue release];
-	requestsQueue = nil;
-	self.currentRequest = nil;
-	self.delegate = nil;
-	[webData release];
-	[urlConnection release];
-	[super dealloc];
 }
 
 @end
