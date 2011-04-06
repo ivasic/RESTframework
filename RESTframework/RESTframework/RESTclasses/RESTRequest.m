@@ -6,7 +6,6 @@
 //
 
 #import "RESTRequest.h"
-#import "RESTConf.h"
 #import "JSONKit.h"
 
 #define GS_POST_BOUNDARY @"----------ThIs_Is_tHe_bouNdaRY_$"
@@ -17,7 +16,7 @@
 @end
 
 @implementation RESTRequest
-@synthesize type, resourcePath, requestType, bodyType, params, files, tag;
+@synthesize type, resourcePath, serviceEndpoint, requestType, bodyType, params, files, tag;
 
 #pragma mark -
 #pragma mark Properties
@@ -36,12 +35,12 @@
 
 #pragma mark - Initialization
 
--(id) initWithType:(RESTRequestType)t resourcePath:(NSArray*)path
+-(id) initWithURL:(NSURL*)url type:(RESTRequestType)t resourcePath:(NSArray*)path
 {
-	return [self initWithType:t resourcePath:path bodyType:RESTRequestBodyTypeFormUrlEncoded];
+	return [self initWithURL:url type:t resourcePath:path bodyType:RESTRequestBodyTypeFormUrlEncoded];
 }
 
--(id) initWithType:(RESTRequestType)t resourcePath:(NSArray*)path bodyType:(RESTRequestBodyType)bt
+-(id) initWithURL:(NSURL*)url type:(RESTRequestType)t resourcePath:(NSArray*)path bodyType:(RESTRequestBodyType)bt
 {
     if ((self = [super init])) {
 		self.type = t;
@@ -51,17 +50,19 @@
 	return self;
 }
 
-+(id) requestWithType:(RESTRequestType)t resourcePath:(NSArray*)path
++(id) requestWithURL:(NSURL*)url type:(RESTRequestType)t resourcePath:(NSArray*)path
 {
-	return [[[RESTRequest alloc] initWithType:t resourcePath:path] autorelease];
+	return [[[RESTRequest alloc] initWithURL:url type:t resourcePath:path] autorelease];
 }
 
-+(id) requestWithType:(RESTRequestType)t resourcePath:(NSArray*)path bodyType:(RESTRequestBodyType)bt
++(id) requestWithURL:(NSURL*)url type:(RESTRequestType)t resourcePath:(NSArray*)path bodyType:(RESTRequestBodyType)bt
 {
-	return [[[RESTRequest alloc] initWithType:t resourcePath:path bodyType:bt] autorelease];
+	return [[[RESTRequest alloc] initWithURL:url type:t resourcePath:path bodyType:bt] autorelease];
 }
 
 -(void) dealloc {
+	[serviceEndpoint release];
+	serviceEndpoint = nil;
 	self.params = nil;
 	self.files = nil;
 	self.resourcePath = nil;
@@ -162,7 +163,7 @@
 
 -(NSURLRequest*) getUrlRequest {
 	NSString* urlString = [NSString stringWithFormat:@"%@%@", 
-						   ENDPOINT_URL, [self resourcePathString]];
+						   self.serviceEndpoint, [self resourcePathString]];
 	
 	//We need to alter URL if it's a GET req..
 	if (self.type == RESTRequestTypeGet && self.hasParams) {

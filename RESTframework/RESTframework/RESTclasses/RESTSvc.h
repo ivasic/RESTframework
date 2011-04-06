@@ -14,7 +14,6 @@
 @interface RESTSvc : NSObject {
 	
 	id<RESTSvcDelegate> delegate;
-	NSURL* serviceEndpoint;
 	
 @private
 	NSURLConnection*			urlConnection;
@@ -31,12 +30,6 @@
  * @abstract This is the pointer to RESTSvcDelegate
  */
 @property (assign) id<RESTSvcDelegate> delegate;
-
-/*!
- * @property serviceEndpoint
- * @abstract URL pointing to the base of RESTful service
- */
-@property (retain) NSURL* serviceEndpoint;
 
 /*!
  * @method execRequest:
@@ -58,13 +51,6 @@
  * @param tag NSUInteger value to look up
  */
 -(BOOL) hasRequestWithTag:(NSUInteger)tag;
-
-/*
- * @method initWithEndpointURL:
- * @abstract Initializes the service with the enpoint URL
- * @param tag NSUInteger value to look up
- */
--(id) initWithEndpointURL:(NSURL*)url;
 
 @end
 

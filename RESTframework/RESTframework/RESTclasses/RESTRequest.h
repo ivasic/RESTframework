@@ -27,7 +27,14 @@ typedef enum {
 	NSMutableDictionary*	params;
 	NSMutableDictionary*	files;
 	NSUInteger				tag;
+	NSURL*					serviceEndpoint;
 }
+
+/*!
+ * @property serviceEndpoint
+ * @abstract URL pointing to the base of RESTful service
+ */
+@property (retain) NSURL* serviceEndpoint;
 
 @property RESTRequestType type;
 @property RESTRequestBodyType bodyType;
@@ -37,11 +44,11 @@ typedef enum {
 @property (readonly) BOOL hasFiles;
 @property NSUInteger tag;
 
--(id) initWithType:(RESTRequestType)t resourcePath:(NSArray*)path;
--(id) initWithType:(RESTRequestType)t resourcePath:(NSArray*)path bodyType:(RESTRequestBodyType)bt;
+-(id) initWithURL:(NSURL*)url type:(RESTRequestType)t resourcePath:(NSArray*)path;
+-(id) initWithURL:(NSURL*)url type:(RESTRequestType)t resourcePath:(NSArray*)path bodyType:(RESTRequestBodyType)bt;
 
-+(id) requestWithType:(RESTRequestType)t resourcePath:(NSArray*)path;
-+(id) requestWithType:(RESTRequestType)t resourcePath:(NSArray*)path bodyType:(RESTRequestBodyType)bt;
++(id) requestWithURL:(NSURL*)url type:(RESTRequestType)t resourcePath:(NSArray*)path;
++(id) requestWithURL:(NSURL*)url type:(RESTRequestType)t resourcePath:(NSArray*)path bodyType:(RESTRequestBodyType)bt;
 
 -(void) addParam:(NSString*)value forKey:(NSString*)key;
 -(void) addFile:(NSData*)data withContentType:(NSString*)ct forKey:(NSString*)key;

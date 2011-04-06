@@ -20,7 +20,7 @@
 @end
 
 @implementation RESTSvc
-@synthesize delegate, currentRequest, requestsQueue, serviceEndpoint;
+@synthesize delegate, currentRequest, requestsQueue;
 
 #pragma mark - Props
 
@@ -35,18 +35,7 @@
 
 #pragma mark - Initialization
 
--(id) initWithEndpointURL:(NSURL*)url
-{
-	if ((self = [super init])) {
-		self.serviceEndpoint = url;
-	}
-	
-	return self;
-}
-
 -(void) dealloc {
-	[serviceEndpoint release];
-	serviceEndpoint = nil;
 	[self cancelRequests];//if any...
 	[requestsQueue release];
 	requestsQueue = nil;
