@@ -47,8 +47,8 @@ typedef enum {
 -(id) initWithURL:(NSURL*)url type:(RESTRequestType)t resourcePath:(NSArray*)path;
 -(id) initWithURL:(NSURL*)url type:(RESTRequestType)t resourcePath:(NSArray*)path bodyType:(RESTRequestBodyType)bt;
 
-+(id) requestWithURL:(NSURL*)url type:(RESTRequestType)t resourcePath:(NSArray*)path;
-+(id) requestWithURL:(NSURL*)url type:(RESTRequestType)t resourcePath:(NSArray*)path bodyType:(RESTRequestBodyType)bt;
++(id) requestWithURL:(NSURL*)url type:(RESTRequestType)t resourcePathComponents:(id)firstObject, ... NS_REQUIRES_NIL_TERMINATION;
++(id) requestWithURL:(NSURL*)url type:(RESTRequestType)t bodyType:(RESTRequestBodyType)bt resourcePathComponents:(id)firstObject, ... NS_REQUIRES_NIL_TERMINATION;
 
 -(void) addParam:(NSString*)value forKey:(NSString*)key;
 -(void) addFile:(NSData*)data withContentType:(NSString*)ct forKey:(NSString*)key;

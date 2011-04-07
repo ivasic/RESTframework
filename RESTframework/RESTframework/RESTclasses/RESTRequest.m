@@ -51,14 +51,36 @@
 	return self;
 }
 
-+(id) requestWithURL:(NSURL*)url type:(RESTRequestType)t resourcePath:(NSArray*)path
++(id) requestWithURL:(NSURL*)url type:(RESTRequestType)t resourcePathComponents:(id)firstObject, ... 
 {
-	return [[[RESTRequest alloc] initWithURL:url type:t resourcePath:path] autorelease];
+	NSMutableArray* path = [NSMutableArray array];
+	id eachObject;
+	va_list argumentList;
+	if (firstObject) // The first argument isn't part of the varargs list,
+	{                                   // so we'll handle it separately.
+		[path addObject: firstObject];
+		va_start(argumentList, firstObject); // Start scanning for arguments after firstObject.
+		while ((eachObject = va_arg(argumentList, id))) // As many times as we can get an argument of type "id"
+			[path addObject: eachObject]; // that isn't nil, add it to self's contents.
+		va_end(argumentList);
+	}
+	return [[[RESTRequest alloc] initWithURL:url type:t resourcePath:[NSArray arrayWithArray:path]] autorelease];
 }
 
-+(id) requestWithURL:(NSURL*)url type:(RESTRequestType)t resourcePath:(NSArray*)path bodyType:(RESTRequestBodyType)bt
++(id) requestWithURL:(NSURL*)url type:(RESTRequestType)t bodyType:(RESTRequestBodyType)bt resourcePathComponents:(id)firstObject, ...
 {
-	return [[[RESTRequest alloc] initWithURL:url type:t resourcePath:path bodyType:bt] autorelease];
+	NSMutableArray* path = [NSMutableArray array];
+	id eachObject;
+	va_list argumentList;
+	if (firstObject) // The first argument isn't part of the varargs list,
+	{                                   // so we'll handle it separately.
+		[path addObject: firstObject];
+		va_start(argumentList, firstObject); // Start scanning for arguments after firstObject.
+		while ((eachObject = va_arg(argumentList, id))) // As many times as we can get an argument of type "id"
+			[path addObject: eachObject]; // that isn't nil, add it to self's contents.
+		va_end(argumentList);
+	}
+	return [[[RESTRequest alloc] initWithURL:url type:t resourcePath:[NSArray arrayWithArray:path] bodyType:bt] autorelease];
 }
 
 -(void) dealloc {

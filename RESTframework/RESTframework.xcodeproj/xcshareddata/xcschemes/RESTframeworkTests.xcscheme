@@ -19,6 +19,20 @@
                ReferencedContainer = "container:RESTframework.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "2C582E89134B7FC3007CAC35"
+               BuildableName = "RESTframework.app"
+               BlueprintName = "RESTframework"
+               ReferencedContainer = "container:RESTframework.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
