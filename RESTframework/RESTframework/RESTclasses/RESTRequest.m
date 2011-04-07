@@ -46,6 +46,7 @@
 		self.type = t;
 		self.resourcePath = path;
 		self.bodyType = bt;
+		self.serviceEndpoint = url;
 	}
 	return self;
 }
