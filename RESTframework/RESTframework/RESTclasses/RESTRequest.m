@@ -214,7 +214,7 @@
 	}
 	else if (self.bodyType == RESTRequestBodyTypeJSON) {
 		if ([self.params objectForKey:GS_BODY_DATA_KEY]) {
-			return [[self.params objectForKey:GS_BODY_DATA_KEY] dataUsingEncoding:NSUTF8StringEncoding];
+			return [self.params objectForKey:GS_BODY_DATA_KEY];
 		}
 		return [[self.params JSONString] dataUsingEncoding:NSUTF8StringEncoding];
 	}
