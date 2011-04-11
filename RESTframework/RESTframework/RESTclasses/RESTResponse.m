@@ -23,6 +23,11 @@
 #pragma mark Properties 
 
 -(NSString*) stringValue {
+	
+	if (!self.responseData) {
+		return nil;
+	}
+	
 	return [[[NSString alloc] initWithData:self.responseData encoding:NSUTF8StringEncoding] autorelease];
 }
 

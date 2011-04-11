@@ -9,6 +9,7 @@
 #import "JSONKit.h"
 
 #define GS_POST_BOUNDARY @"----------ThIs_Is_tHe_bouNdaRY_$"
+#define GS_BODY_DATA_KEY @"GS_BODY_DATA_KEY"
 
 @interface RESTRequest ()
 @property (nonatomic, retain) NSMutableDictionary*	params;
@@ -67,6 +68,32 @@
 	return [[[RESTRequest alloc] initWithURL:url type:t resourcePath:[NSArray arrayWithArray:path]] autorelease];
 }
 
++(id) requestWithURL:(NSURL*)url type:(RESTRequestType)t bodyData:(NSData*)bodyData resourcePathComponents:(id)firstObject, ... 
+{
+	NSMutableArray* path = [NSMutableArray array];
+	id eachObject;
+	va_list argumentList;
+	if (firstObject) // The first argument isn't part of the varargs list,
+	{                                   // so we'll handle it separately.
+		[path addObject: firstObject];
+		va_start(argumentList, firstObject); // Start scanning for arguments after firstObject.
+		while ((eachObject = va_arg(argumentList, id))) // As many times as we can get an argument of type "id"
+			[path addObject: eachObject]; // that isn't nil, add it to self's contents.
+		va_end(argumentList);
+	}
+	
+	RESTRequest* r = [[[RESTRequest alloc] initWithURL:url type:t resourcePath:[NSArray arrayWithArray:path]] autorelease];
+	
+	if (!r.params) {
+		r.params = [NSMutableDictionary dictionary];
+	}
+	
+	//add key/value
+	[r.params setObject:bodyData forKey:GS_BODY_DATA_KEY];
+	
+	return r;
+}
+
 +(id) requestWithURL:(NSURL*)url type:(RESTRequestType)t bodyType:(RESTRequestBodyType)bt resourcePathComponents:(id)firstObject, ...
 {
 	NSMutableArray* path = [NSMutableArray array];
@@ -81,6 +108,31 @@
 		va_end(argumentList);
 	}
 	return [[[RESTRequest alloc] initWithURL:url type:t resourcePath:[NSArray arrayWithArray:path] bodyType:bt] autorelease];
+}
+
++(id) requestWithURL:(NSURL*)url type:(RESTRequestType)t bodyData:(NSData*)bodyData bodyType:(RESTRequestBodyType)bt resourcePathComponents:(id)firstObject, ...
+{
+	NSMutableArray* path = [NSMutableArray array];
+	id eachObject;
+	va_list argumentList;
+	if (firstObject) // The first argument isn't part of the varargs list,
+	{                                   // so we'll handle it separately.
+		[path addObject: firstObject];
+		va_start(argumentList, firstObject); // Start scanning for arguments after firstObject.
+		while ((eachObject = va_arg(argumentList, id))) // As many times as we can get an argument of type "id"
+			[path addObject: eachObject]; // that isn't nil, add it to self's contents.
+		va_end(argumentList);
+	}
+	RESTRequest* r = [[[RESTRequest alloc] initWithURL:url type:t resourcePath:[NSArray arrayWithArray:path] bodyType:bt] autorelease];
+	
+	if (!r.params) {
+		r.params = [NSMutableDictionary dictionary];
+	}
+	
+	//add key/value
+	[r.params setObject:bodyData forKey:GS_BODY_DATA_KEY];
+	
+	return r;
 }
 
 -(void) dealloc {
