@@ -13,6 +13,8 @@
 @interface RESTSvc ()
 @property (nonatomic, retain) RESTRequest* currentRequest;
 @property (readonly) NSMutableArray* requestsQueue;
+@property (retain) id<RESTSvcDelegate> asyncDelegate;
+@property (retain) RESTRequestCompletion asyncCompletionBlock;
 @end
 
 @interface RESTSvc (privates)
@@ -20,7 +22,7 @@
 @end
 
 @implementation RESTSvc
-@synthesize delegate, currentRequest, requestsQueue;
+@synthesize delegate, currentRequest, requestsQueue, asyncDelegate, asyncCompletionBlock;
 
 #pragma mark - Props
 
@@ -41,6 +43,8 @@
 	requestsQueue = nil;
 	self.currentRequest = nil;
 	self.delegate = nil;
+	self.asyncDelegate = nil;
+	self.asyncCompletionBlock = nil;
 	[webData release];
 	[urlConnection release];
 	[super dealloc];
@@ -176,6 +180,26 @@
 	//nil it
 	self.currentRequest = nil;
 	[self continueExecFromQueue];
+}
+
+#pragma mark - Class Methods
+
++(void) execRequest:(RESTRequest*)request completion:(RESTRequestCompletion)completion
+{
+	RESTSvc* svc = [[[RESTSvc alloc] init] autorelease];
+	svc.delegate = svc;
+	svc.asyncDelegate = svc;
+	svc.asyncCompletionBlock = completion;
+	[svc execRequest:request];
+}
+
+#pragma mark - SVC delegate
+
+-(void) restSvc:(RESTSvc *)svc didFinishWithResponse:(RESTResponse *)response
+{
+	self.asyncCompletionBlock(response);
+	self.asyncCompletionBlock = nil;
+	self.asyncDelegate = nil;
 }
 
 @end

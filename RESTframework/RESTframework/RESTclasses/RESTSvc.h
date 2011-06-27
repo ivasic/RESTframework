@@ -9,50 +9,8 @@
 
 @class RESTRequest;
 @class RESTResponse;
-@protocol RESTSvcDelegate;
-
-@interface RESTSvc : NSObject {
-	
-	id<RESTSvcDelegate> delegate;
-	
-@private
-	NSURLConnection*			urlConnection;
-	NSMutableData*				webData;
-	
-	int							httpCode;
-	RESTRequest*				currentRequest;
-	
-	NSMutableArray*				requestsQueue;
-}
-
-/*!
- * @property delegate
- * @abstract This is the pointer to RESTSvcDelegate
- */
-@property (assign) id<RESTSvcDelegate> delegate;
-
-/*!
- * @method execRequest:
- * @abstract Adds the request to the queue for execution and executes it when the time comes
- * @param request RESTRequest to be executed
- */
--(void) execRequest:(RESTRequest*)request;
-
-/*!
- * @method cancelRequests
- * @abstract Cancels all the asynchronous REST HTTP requests in queue and releases all used resources
- */
--(void) cancelRequests;
-
-
-/*
- * @method hasRequestWithTag:
- * @abstract This method checks if there's a queued or currently executing request with the specified tag
- * @param tag NSUInteger value to look up
- */
--(BOOL) hasRequestWithTag:(NSUInteger)tag;
-
-@end
+@class RESTSvc;
+typedef void (^RESTRequestCompletion)(RESTResponse* response);
 
 /*!
  * @protocol RESTSvcDelegate
@@ -89,5 +47,57 @@
 -(void) restSvc:(RESTSvc*)svc loadedData:(NSUInteger)bytes;
 
 @end
+
+
+
+@interface RESTSvc : NSObject <RESTSvcDelegate> {
+	
+	id<RESTSvcDelegate> delegate;
+	
+@private
+	NSURLConnection*			urlConnection;
+	NSMutableData*				webData;
+	
+	int							httpCode;
+	RESTRequest*				currentRequest;
+	
+	NSMutableArray*				requestsQueue;
+}
+
+/*!
+ * @property delegate
+ * @abstract This is the pointer to RESTSvcDelegate
+ */
+@property (assign) id<RESTSvcDelegate> delegate;
+
+/*!
+ * @method execRequest:
+ * @abstract Adds the request to the queue for execution and executes it when the time comes
+ * @param request RESTRequest to be executed
+ */
+-(void) execRequest:(RESTRequest*)request;
+
+/*!
+ * @method execRequest:completion
+ * @abstract Creates a RESTSvc object and executes RESTRequest async. Notifies about completion via completion block.
+ * @param request RESTRequest to be executed
+ */
++(void) execRequest:(RESTRequest*)request completion:(RESTRequestCompletion)completion;
+
+/*!
+ * @method cancelRequests
+ * @abstract Cancels all the asynchronous REST HTTP requests in queue and releases all used resources
+ */
+-(void) cancelRequests;
+
+/*
+ * @method hasRequestWithTag:
+ * @abstract This method checks if there's a queued or currently executing request with the specified tag
+ * @param tag NSUInteger value to look up
+ */
+-(BOOL) hasRequestWithTag:(NSUInteger)tag;
+
+@end
+
 
 

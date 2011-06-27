@@ -7,6 +7,9 @@
 //
 
 #import "RESTframeworkAppDelegate.h"
+#import "RESTSvc.h"
+#import "RESTRequest.h"
+#import "RESTResponse.h"
 
 @implementation RESTframeworkAppDelegate
 
@@ -21,6 +24,19 @@
 	// Add the navigation controller's view to the window and display.
 	self.window.rootViewController = self.navigationController;
 	[self.window makeKeyAndVisible];
+	
+	
+	RESTRequest* r = [RESTRequest requestWithURL:[NSURL URLWithString:@"http://api.flickr.com/services/rest"] type:RESTRequestTypeGet resourcePathComponents:@"", nil];
+	//?method=flickr.test.echo&name=value&format=json
+	[r addParam:@"flickr.test.echo" forKey:@"method"];
+	[r addParam:@"value" forKey:@"name"];
+	[r addParam:@"json" forKey:@"format"];
+	
+	[RESTSvc execRequest:r completion:^(RESTResponse* response){
+		NSLog(@"%@", response);
+	}];
+	
+	
     return YES;
 }
 
