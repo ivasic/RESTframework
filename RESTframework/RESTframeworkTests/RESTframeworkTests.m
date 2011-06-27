@@ -129,11 +129,11 @@
 	STAssertTrue(r.hasParams, @"No params!?");
 	STAssertNotNil([r body], @"No body");
 	STAssertEqualObjects(r.contentType, @"application/json", @"Content Type not ok");
-	STAssertEqualObjects(r.resourcePathString, @"sub1/sub2", @"Invalid resource path");
+	STAssertEqualObjects(r.resourcePathString, @"sub1/sub2/sub3", @"Invalid resource path");
 	
 	NSURLRequest* req = [r getUrlRequest];
 	STAssertNotNil(req, @"Invalid url request");
-	STAssertEqualObjects([[req URL] absoluteString], @"test/sub1/sub2", @"URL invalid");
+	STAssertEqualObjects([[req URL] absoluteString], @"test/sub1/sub2/sub3", @"URL invalid");
 	
 
 	
