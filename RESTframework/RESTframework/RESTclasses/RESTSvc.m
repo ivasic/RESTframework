@@ -14,7 +14,7 @@
 @property (nonatomic, retain) RESTRequest* currentRequest;
 @property (readonly) NSMutableArray* requestsQueue;
 @property (retain) id<RESTSvcDelegate> asyncDelegate;
-@property (retain) RESTRequestCompletion asyncCompletionBlock;
+@property (copy) RESTRequestCompletion asyncCompletionBlock;
 @end
 
 @interface RESTSvc (privates)
