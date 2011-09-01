@@ -25,7 +25,6 @@
 		2C582EE9134B80D9007CAC35 /* RESTRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C582EE4134B80D9007CAC35 /* RESTRequest.m */; };
 		2C582EEA134B80D9007CAC35 /* RESTResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C582EE6134B80D9007CAC35 /* RESTResponse.m */; };
 		2C582EEB134B80D9007CAC35 /* RESTSvc.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C582EE8134B80D9007CAC35 /* RESTSvc.m */; };
-		2C582F2D134B822F007CAC35 /* JSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C582F14134B822F007CAC35 /* JSONKit.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,8 +64,6 @@
 		2C582EE6134B80D9007CAC35 /* RESTResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RESTResponse.m; sourceTree = "<group>"; };
 		2C582EE7134B80D9007CAC35 /* RESTSvc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RESTSvc.h; sourceTree = "<group>"; };
 		2C582EE8134B80D9007CAC35 /* RESTSvc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RESTSvc.m; sourceTree = "<group>"; };
-		2C582F13134B822F007CAC35 /* JSONKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONKit.h; sourceTree = "<group>"; };
-		2C582F14134B822F007CAC35 /* JSONKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONKit.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,7 +95,6 @@
 			children = (
 				2C582EDD134B802F007CAC35 /* RESTclasses */,
 				2C582EC8134B8029007CAC35 /* Application */,
-				2C582EEC134B822F007CAC35 /* JSONKit */,
 				2C582EB4134B7FC3007CAC35 /* RESTframeworkTests */,
 				2C582E8D134B7FC3007CAC35 /* Frameworks */,
 				2C582E8B134B7FC3007CAC35 /* Products */,
@@ -206,16 +202,6 @@
 				2C582ED5134B8029007CAC35 /* RootViewController.m */,
 			);
 			name = Views;
-			sourceTree = "<group>";
-		};
-		2C582EEC134B822F007CAC35 /* JSONKit */ = {
-			isa = PBXGroup;
-			children = (
-				2C582F13134B822F007CAC35 /* JSONKit.h */,
-				2C582F14134B822F007CAC35 /* JSONKit.m */,
-			);
-			name = JSONKit;
-			path = RESTframework/JSONKit;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -332,7 +318,6 @@
 				2C582EE9134B80D9007CAC35 /* RESTRequest.m in Sources */,
 				2C582EEA134B80D9007CAC35 /* RESTResponse.m in Sources */,
 				2C582EEB134B80D9007CAC35 /* RESTSvc.m in Sources */,
-				2C582F2D134B822F007CAC35 /* JSONKit.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

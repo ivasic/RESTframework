@@ -8,7 +8,6 @@
 #import "RESTSvc.h"
 #import "RESTRequest.h"
 #import "RESTResponse.h"
-#import "JSONKit.h"
 
 @interface RESTSvc ()
 @property (nonatomic, retain) RESTRequest* currentRequest;

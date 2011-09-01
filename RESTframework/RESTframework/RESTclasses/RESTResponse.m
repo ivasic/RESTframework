@@ -7,7 +7,6 @@
 
 #import "RESTResponse.h"
 #import "RESTRequest.h"
-#import "JSONKit.h"
 
 @interface RESTResponse()
 @property (nonatomic, readwrite, retain) RESTRequest*	request;
@@ -17,39 +16,7 @@
 
 
 @implementation RESTResponse
-@synthesize responseData, error, request, stringValue, dictionaryValue, arrayValue, httpCode;
-
-#pragma mark -
-#pragma mark Properties 
-
--(NSString*) stringValue {
-	
-	if (!self.responseData) {
-		return nil;
-	}
-	
-	return [[[NSString alloc] initWithData:self.responseData encoding:NSUTF8StringEncoding] autorelease];
-}
-
--(NSDictionary*) dictionaryValue {
-	//possible minor performance improvement - cache the last conversion until the stringValue changes...
-	id val = [[self stringValue] objectFromJSONString];
-	if ([val isKindOfClass:[NSDictionary class]]) {
-		return val;
-	}
-	
-	return nil;
-}
-
--(NSArray*) arrayValue {
-	//possible minor performance improvement - cache the last conversion until the stringValue changes...
-	id val = [[self stringValue] objectFromJSONString];
-	if ([val isKindOfClass:[NSArray class]]) {
-		return val;
-	}
-	
-	return nil;
-}
+@synthesize responseData, error, request, httpCode;
 
 #pragma mark -
 #pragma mark Initialization
@@ -82,6 +49,27 @@
 	return [[[RESTResponse alloc] initWithRequest:req error:e statusCode:statusCode] autorelease];
 }
 
+#pragma mark - Value Getters
+
+-(NSString*) stringValue {
+	if (!self.responseData || self.responseData.length == 0) {
+		return nil;
+	}
+	
+	return [[[NSString alloc] initWithData:self.responseData encoding:NSUTF8StringEncoding] autorelease];
+}
+
+-(NSString*) stringValueWithEncoding:(NSStringEncoding)encoding {
+	if (!self.responseData || self.responseData.length == 0) {
+		return nil;
+	}
+	
+	return [[[NSString alloc] initWithData:self.responseData encoding:encoding] autorelease];
+}
+
+-(NSData*) dataValue {
+	return self.responseData;
+}
 
 -(NSString*) description {
 	return [NSString stringWithFormat:@"RESTResponse %@, HTTP: %d\r\nData: %@\r\nError: %@",

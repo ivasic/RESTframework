@@ -6,7 +6,6 @@
 //
 
 #import "RESTRequest.h"
-#import "JSONKit.h"
 
 #define GS_POST_BOUNDARY @"----------ThIs_Is_tHe_bouNdaRY_$"
 #define GS_BODY_DATA_KEY @"GS_BODY_DATA_KEY"
@@ -216,7 +215,7 @@
 		if ([self.params objectForKey:GS_BODY_DATA_KEY]) {
 			return [self.params objectForKey:GS_BODY_DATA_KEY];
 		}
-		return [[self.params JSONString] dataUsingEncoding:NSUTF8StringEncoding];
+		NSAssert(NO, @"Invalid Request body");
 	}
 	
 	NSLog(@"Unknown POST encoding?");
@@ -229,8 +228,8 @@
 			return @"application/x-www-form-urlencoded";
 		case RESTRequestBodyTypeMultiPartFormData:
 			return [NSString stringWithFormat:@"multipart/form-data; boundary=%@", GS_POST_BOUNDARY];
-		case RESTRequestBodyTypeJSON:
-			return @"application/json";
+		/*case RESTRequestBodyTypeJSON:
+			return @"application/json";*/
 		default:
 			break;
 	}

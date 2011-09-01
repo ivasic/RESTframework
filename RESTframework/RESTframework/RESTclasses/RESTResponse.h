@@ -18,16 +18,16 @@
 
 @property int											httpCode;
 @property (nonatomic, readonly, retain) RESTRequest*	request;
-@property (nonatomic, readonly, retain) NSData*			responseData;
 @property (nonatomic, readonly, retain) NSError*		error;
-@property (nonatomic, readonly)			NSString*		stringValue;
-@property (nonatomic, readonly)			NSDictionary*	dictionaryValue;
-@property (nonatomic, readonly)			NSArray*		arrayValue;
 
 -(id) initWithRequest:(RESTRequest*)req data:(NSData*)data statusCode:(int)statusCode;
 -(id) initWithRequest:(RESTRequest*)req error:(NSError*)e statusCode:(int)statusCode;
 
 +(RESTResponse*) responseWithRequest:(RESTRequest*)req data:(NSData*)data statusCode:(int)statusCode;
 +(RESTResponse*) responseWithRequest:(RESTRequest*)req error:(NSError*)e statusCode:(int)statusCode;
+
+-(NSString*) stringValue;
+-(NSString*) stringValueWithEncoding:(NSStringEncoding)encoding;
+-(NSData*) dataValue;
 
 @end
