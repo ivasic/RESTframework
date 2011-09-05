@@ -1,26 +1,28 @@
 //
-//  RESTSvc.m
+//  RFService.m
+//  RESTframework
 //
-//  Created by Ivan on 9.3.11..
+//  Created by Ivan Vasić on 9/4/11.
 //  Copyright 2011 Ivan Vasic https://github.com/ivasic/RESTframework. All rights reserved.
 //
 
-#import "RESTSvc.h"
-#import "RESTRequest.h"
-#import "RESTResponse.h"
+#import "RFService.h"
+#import "RFconf.h"
+#import "RFRequest.h"
+#import "RFResponse.h"
 
-@interface RESTSvc ()
-@property (nonatomic, retain) RESTRequest* currentRequest;
+@interface RFService ()
+@property (nonatomic, retain) RFRequest* currentRequest;
 @property (readonly) NSMutableArray* requestsQueue;
-@property (retain) id<RESTSvcDelegate> asyncDelegate;
-@property (copy) RESTRequestCompletion asyncCompletionBlock;
+@property (retain) id<RFServiceDelegate> asyncDelegate;
+@property (copy) RFRequestCompletion asyncCompletionBlock;
 @end
 
-@interface RESTSvc (privates)
+@interface RFService (privates)
 -(void) continueExecFromQueue;
 @end
 
-@implementation RESTSvc
+@implementation RFService
 @synthesize delegate, currentRequest, requestsQueue, asyncDelegate, asyncCompletionBlock;
 
 #pragma mark - Props
@@ -51,30 +53,30 @@
 
 #pragma mark - Execution
 
--(void) execRequest:(RESTRequest*)request {
+-(void) execRequest:(RFRequest*)request {
 	
 	//check if something is already running...
 	if (self.currentRequest) {
 		//if it is, queue the request for later
 		[self.requestsQueue addObject:request];
-		NSLog(@"Request %@ queued", request);
+		RFLog(@"Request %@ queued", request);
 		return;
 	}
 	
 	self.currentRequest = request;
-	NSURLRequest* urlRequest = [request getUrlRequest];
+	NSURLRequest* urlRequest = [request urlRequest];
 	
 	if (urlConnection != nil) {
 		[urlConnection release];
 		urlConnection = nil;
 	}
 	
-	NSLog(@"REST Request: %@", [request resourcePathString]);
+	RFLog(@"executing: %@", [request URL]);
 	urlConnection = [[NSURLConnection alloc] initWithRequest:urlRequest delegate:self startImmediately:YES];
 	
 	
-	if (self.delegate && [self.delegate respondsToSelector:@selector(restSvc:didStartLoadingRequest:)]) {
-		[self.delegate restSvc:self didStartLoadingRequest:request];
+	if (self.delegate && [self.delegate respondsToSelector:@selector(restService:didStartLoadingRequest:)]) {
+		[self.delegate restService:self didStartLoadingRequest:request];
 	}
 }
 
@@ -85,9 +87,9 @@
 		return;
 	}
 	
-	RESTRequest* r = [[self.requestsQueue objectAtIndex:0] retain];
+	RFRequest* r = [[self.requestsQueue objectAtIndex:0] retain];
 	[self.requestsQueue removeObjectAtIndex:0]; //remove from queue
-	NSLog(@"Executing queued request: %@", r);
+	RFLog(@"Executing queued request: %@", r);
 	[self execRequest:r];
 	[r release];
 }
@@ -113,7 +115,7 @@
 		return YES;
 	}
 	
-	for (RESTRequest* r in self.requestsQueue) {
+	for (RFRequest* r in self.requestsQueue) {
 		if (r.tag == tag) {
 			return YES;
 		}
@@ -140,8 +142,8 @@
 -(void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
 	assert(webData != nil);
 	[webData appendData:data];
-	if (self.delegate && [self.delegate respondsToSelector:@selector(restSvc:loadedData:)]) {
-		[self.delegate restSvc:self loadedData:[webData length]];
+	if (self.delegate && [self.delegate respondsToSelector:@selector(restService:loadedData:)]) {
+		[self.delegate restService:self loadedData:[webData length]];
 	}
 }
 
@@ -152,8 +154,8 @@
 	urlConnection = nil;
 	
 	//notify
-	if (self.delegate && [(NSObject*)self.delegate respondsToSelector:@selector(restSvc:didFinishWithResponse:)]) {
-		[self.delegate restSvc:self didFinishWithResponse:[RESTResponse responseWithRequest:self.currentRequest error:error statusCode:httpCode]];
+	if (self.delegate && [(NSObject*)self.delegate respondsToSelector:@selector(restService:didFinishWithResponse:)]) {
+		[self.delegate restService:self didFinishWithResponse:[RFResponse responseWithRequest:self.currentRequest error:error statusCode:httpCode]];
 	}
 	
 	//nil it
@@ -166,8 +168,8 @@
 	[urlConnection release];
 	urlConnection = nil;
 	
-	if (self.delegate && [(NSObject*)self.delegate respondsToSelector:@selector(restSvc:didFinishWithResponse:)]) {
-		[self.delegate restSvc:self didFinishWithResponse:[RESTResponse 
+	if (self.delegate && [(NSObject*)self.delegate respondsToSelector:@selector(restService:didFinishWithResponse:)]) {
+		[self.delegate restService:self didFinishWithResponse:[RFResponse 
 														   responseWithRequest:self.currentRequest 
 														   data:[NSData dataWithData:webData] 
 														   statusCode:httpCode]];
@@ -183,9 +185,9 @@
 
 #pragma mark - Class Methods
 
-+(void) execRequest:(RESTRequest*)request completion:(RESTRequestCompletion)completion
++(void) execRequest:(RFRequest*)request completion:(RFRequestCompletion)completion
 {
-	RESTSvc* svc = [[[RESTSvc alloc] init] autorelease];
+	RFService* svc = [[[RFService alloc] init] autorelease];
 	svc.delegate = svc;
 	svc.asyncDelegate = svc;
 	svc.asyncCompletionBlock = completion;
@@ -194,11 +196,10 @@
 
 #pragma mark - SVC delegate
 
--(void) restSvc:(RESTSvc *)svc didFinishWithResponse:(RESTResponse *)response
+-(void) restService:(RFService *)svc didFinishWithResponse:(RFResponse *)response
 {
 	self.asyncCompletionBlock(response);
 	self.asyncCompletionBlock = nil;
 	self.asyncDelegate = nil;
 }
-
 @end

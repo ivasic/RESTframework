@@ -7,9 +7,9 @@
 //
 
 #import "RESTframeworkAppDelegate.h"
-#import "RESTSvc.h"
-#import "RESTRequest.h"
-#import "RESTResponse.h"
+#import "RFService.h"
+#import "RFRequest.h"
+#import "RFResponse.h"
 
 @implementation RESTframeworkAppDelegate
 
@@ -26,16 +26,15 @@
 	[self.window makeKeyAndVisible];
 	
 	
-	RESTRequest* r = [RESTRequest requestWithURL:[NSURL URLWithString:@"http://api.flickr.com/services/rest"] type:RESTRequestTypeGet resourcePathComponents:@"", nil];
+	RFRequest* r = [RFRequest requestWithURL:[NSURL URLWithString:@"http://api.flickr.com/services/rest"] type:RFRequestMethodGet resourcePathComponents:@"", nil];
 	//?method=flickr.test.echo&name=value&format=json
 	[r addParam:@"flickr.test.echo" forKey:@"method"];
 	[r addParam:@"value" forKey:@"name"];
 	[r addParam:@"json" forKey:@"format"];
 	
-	[RESTSvc execRequest:r completion:^(RESTResponse* response){
+	[RFService execRequest:r completion:^(RFResponse* response){
 		NSLog(@"%@", response);
 	}];
-	
 	
     return YES;
 }

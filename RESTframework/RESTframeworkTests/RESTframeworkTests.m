@@ -7,9 +7,8 @@
 //
 
 #import "RESTframeworkTests.h"
-#import "RESTRequest.h"
-#import "RESTResponse.h"
-#import "RESTSvc.h"
+#import "RFRequest.h"
+#import "RFResponse.h"
 
 @implementation RESTframeworkTests
 
@@ -27,42 +26,112 @@
     [super tearDown];
 }
 
+-(void) testRFRequestGET
+{
+	RFRequest* r = [[[RFRequest alloc] init] autorelease];
+	r.serviceEndpoint = [NSURL URLWithString:@"http://dummy.url/path1/"];
+	r.resourcePath = [NSArray arrayWithObjects:@"sub1", @"sub2", @"sub 3", @"sub+4", @"sub&5", @"sub-6", @"sub%7", @"sub@8", @"sub!9", nil];
+	
+	//additional headers
+	r.additionalHTTPHeaders = [NSDictionary dictionaryWithObjectsAndKeys:@"v1", @"k1", @"v2", @"k2", nil];
+	
+	STAssertFalse(r.hasParams, @"Request has params even though none added");
+	[r addParam:@"v1" forKey:@"k1"];
+	[r addParam:@"v2" forKey:@"k2"];
+	[r addParam:@"v3" forKey:@"k3"];
+	[r addParam:@"v 4" forKey:@"k 4"];
+	[r addParam:@"v+5" forKey:@"k+5"];
+	[r addParam:@"v%6" forKey:@"k%6"];
+	[r addParam:@"v&7" forKey:@"k&7"];
+	STAssertTrue(r.hasParams, @"Request doesn't have params even though added");
+	
+	//try to confuse it
+	[r addData:[@"qdwdqdqwdqwd" dataUsingEncoding:NSUTF8StringEncoding] withContentType:@"application/junk" forKey:@"junkData"];
+	[r addData:[@"qdwdqdqwdqwd" dataUsingEncoding:NSUTF8StringEncoding] withContentType:@"application/junk" forKey:@"junkData"];
+	STAssertTrue(r.hasParams, @"Request doesn't have params even though added");
+	
+	NSURL* url = [r URL];
+	NSURLRequest* urlReq = [r urlRequest];
+	
+	STAssertEqualObjects(url, [NSURL URLWithString:@"http://dummy.url/path1/sub1/sub2/sub%203/sub+4/sub&5/sub-6/sub%257/sub@8/sub!9?k1=v1&k2=v2&k3=v3&k%204=v%204&k+5=v+5&k%256=v%256&k&7=v&7"], @"Incorrect URL");
+	STAssertEqualObjects(url, [urlReq URL], @"URL's don't match");
+	STAssertEqualObjects(urlReq.HTTPMethod, @"GET", @"Invalid HTTP method");
+	STAssertEquals(r.requestMethod, RFRequestMethodGet, @"Invalid request type");
+	STAssertEqualObjects([urlReq valueForHTTPHeaderField:@"k1"], @"v1", @"Invalid arg");
+	STAssertEqualObjects([urlReq valueForHTTPHeaderField:@"k2"], @"v2", @"Invalid arg");
+	STAssertNil([urlReq valueForHTTPHeaderField:@"Content-Type"], @"Shouldn't have Content-Type");
+	STAssertNil([urlReq HTTPBody], @"Shouldn't have body");
+	STAssertNotNil(r.serviceEndpoint, @"No endpoint");
+	STAssertNotNil(r.resourcePath, @"No res path");
+	STAssertTrue(r.additionalHTTPHeaders.count == 2, @"Additional headers count");
+	
+	
+	STAssertEqualObjects([urlReq valueForHTTPHeaderField:@"Accept"], @"*/*", @"Invalid Accept HTTP field");
+	STAssertNil([r acceptsContentType], @"Different Accept");
+	r.acceptsContentType = @"my/type";
+	urlReq = [r urlRequest];
+	STAssertEqualObjects([urlReq valueForHTTPHeaderField:@"Accept"], @"my/type", @"Invalid Accept HTTP field");
+}
+
+-(void) testPOST
+{
+	//RFPostRequest
+}
+
 -(void) testRequestTypes
 {
-	RESTRequest* r = [RESTRequest requestWithURL:nil type:RESTRequestTypeGet resourcePathComponents:nil];
-	STAssertEqualObjects(r.requestType, @"GET", @"GET request invalid");
+	RFRequest* r = [RFRequest requestWithURL:[NSURL URLWithString:@"http://dummy"] type:RFRequestMethodGet resourcePathComponents:nil];
+	NSURLRequest* ur = [r urlRequest];
+	STAssertEqualObjects(ur.HTTPMethod, @"GET", @"GET request invalid");
 	
-	r = [RESTRequest requestWithURL:nil type:RESTRequestTypePut resourcePathComponents:nil];
-	STAssertEqualObjects(r.requestType, @"PUT", @"PUT request invalid");
+	r = [RFRequest requestWithURL:[NSURL URLWithString:@"http://dummy"] type:RFRequestMethodPut resourcePathComponents:nil];
+	ur = [r urlRequest];
+	STAssertEqualObjects(ur.HTTPMethod, @"PUT", @"PUT request invalid");
 	
-	r = [RESTRequest requestWithURL:nil type:RESTRequestTypePost resourcePathComponents:nil];
-	STAssertEqualObjects(r.requestType, @"POST", @"POST request invalid");
+	r = [RFRequest requestWithURL:[NSURL URLWithString:@"http://dummy"] type:RFRequestMethodPost resourcePathComponents:nil];
+	ur = [r urlRequest];
+	STAssertEqualObjects(ur.HTTPMethod, @"POST", @"POST request invalid");
 	
-	r = [RESTRequest requestWithURL:nil type:RESTRequestTypeDelete resourcePathComponents:nil];
-	STAssertEqualObjects(r.requestType, @"DELETE", @"DELETE request invalid");
+	r = [RFRequest requestWithURL:[NSURL URLWithString:@"http://dummy"] type:RFRequestMethodDelete resourcePathComponents:nil];
+	ur = [r urlRequest];
+	STAssertEqualObjects(ur.HTTPMethod, @"DELETE", @"DELETE request invalid");
+}
+
+
+-(void) testDefaults
+{
+	RFRequest* r = [RFRequest requestWithURL:[NSURL URLWithString:@"http://dummy"] type:RFRequestMethodGet resourcePathComponents:nil];
+	NSURLRequest* ur = [r urlRequest];
+	STAssertEqualObjects([ur valueForHTTPHeaderField:@"Accept"], @"*/*", @"invalid accept content type");
+	
+	//body content type
+	r.requestMethod = RFRequestMethodPost;
+	r.bodyData = [@"test" dataUsingEncoding:NSUTF8StringEncoding];
+	ur = [r urlRequest];
+	STAssertEqualObjects([ur valueForHTTPHeaderField:@"Content-Type"], @"application/x-www-form-urlencoded", @"Invalid content type");
 }
 
 - (void)testGetRequestResponse1
 {
-	RESTRequest* r = [RESTRequest requestWithURL:[NSURL URLWithString:@"test/"] type:RESTRequestTypeGet bodyType:RESTRequestBodyTypeFormUrlEncoded resourcePathComponents:@"sub1", @"sub2", nil];
+	RFRequest* r = [RFRequest requestWithURL:[NSURL URLWithString:@"test/"] type:RFRequestMethodGet bodyContentType:RFRequestBodyTypeFormUrlEncoded resourcePathComponents:@"sub1", @"sub2", nil];
 	[r addParam:@"v1" forKey:@"p1"];
 	[r addParam:@"v2" forKey:@"p2"];
 	
 	STAssertNotNil(r.serviceEndpoint, @"Endpoint is null!");
 	STAssertNotNil(r.resourcePath, @"Path is null!");
 	STAssertTrue(r.hasParams, @"No params!?");
-	STAssertNotNil([r body], @"No body");
-	STAssertEqualObjects(r.contentType, @"application/x-www-form-urlencoded", @"Content Type not ok");
-	STAssertEqualObjects(r.resourcePathString, @"sub1/sub2", @"Invalid resource path");
+	STAssertNil(r.bodyData, @"No custom body data assigned yet the property holds some value?");
 	
-	NSURLRequest* req = [r getUrlRequest];
+	NSURLRequest* req = [r urlRequest];
+	STAssertNil(r.bodyData, @"GET request shouldn't have body even after URLRequest is created");
 	STAssertNotNil(req, @"Invalid url request");
-	STAssertEqualObjects([[req URL] absoluteString], @"test/sub1/sub2?p2=v2&p1=v1", @"URL invalid");
+	STAssertEqualObjects([[req URL] absoluteString], @"test/sub1/sub2?p1=v1&p2=v2", @"URL invalid");
+	STAssertNil([req valueForHTTPHeaderField:@"Content-Type"], @"Content Type should be NULL");
 	
 	
 	///response, empty w/ error
 	NSError* err = [NSError errorWithDomain:@"testError" code:400 userInfo:nil];
-	RESTResponse* response = [RESTResponse responseWithRequest:r error:err statusCode:400];
+	RFResponse* response = [RFResponse responseWithRequest:r error:err statusCode:400];
 	STAssertEquals(r, response.request, @"Invalid request pointer");
 	STAssertEquals(err, response.error, @"Invalid error pointer");
 	STAssertEquals(response.httpCode, 400, @"Invalid HTTP code");
@@ -72,44 +141,23 @@
 
 - (void)testPostRequestResponse1
 {
-	RESTRequest* r = [RESTRequest requestWithURL:[NSURL URLWithString:@"test/"] type:RESTRequestTypePost bodyType:RESTRequestBodyTypeFormUrlEncoded resourcePathComponents:@"sub1", @"sub2", nil];
+	RFRequest* r = [RFRequest requestWithURL:[NSURL URLWithString:@"test/"] type:RFRequestMethodPost bodyContentType:RFRequestBodyTypeFormUrlEncoded resourcePathComponents:@"sub1", @"sub2", nil];
 	[r addParam:@"v1" forKey:@"p1"];
 	[r addParam:@"v2" forKey:@"p2"];
 	
 	STAssertNotNil(r.serviceEndpoint, @"Endpoint is null!");
 	STAssertNotNil(r.resourcePath, @"Path is null!");
 	STAssertTrue(r.hasParams, @"No params!?");
-	STAssertNotNil([r body], @"No body");
-	STAssertEqualObjects(r.contentType, @"application/x-www-form-urlencoded", @"Content Type not ok");
-	STAssertEqualObjects(r.resourcePathString, @"sub1/sub2", @"Invalid resource path");
+	STAssertNil(r.bodyData, @"No custom body data assigned yet the property holds some value?");
 	
-	NSURLRequest* req = [r getUrlRequest];
+	NSURLRequest* req = [r urlRequest];
+	STAssertNotNil(r.bodyData, @"Non-GET request should have bodyData after urlRequest is called");
 	STAssertNotNil(req, @"Invalid url request");
 	STAssertEqualObjects([[req URL] absoluteString], @"test/sub1/sub2", @"URL invalid");
+	STAssertEqualObjects([req valueForHTTPHeaderField:@"Content-Type"], @"application/x-www-form-urlencoded", @"Invalid content type");
 	
-}
-
-- (void)testPostDataRequestResponse1
-{
-	NSString* jsonBody = @"{\"p2\":\"v2\",\"p1\":\"v1\"}";
-	NSData* jsonData = [jsonBody dataUsingEncoding:NSUTF8StringEncoding];
+	STAssertTrue([[req HTTPBody] length] == 11, @"Invalid HTTP body, daata length should be 11 bytes instead of %d", [[req HTTPBody] length]);
 	
-	RESTRequest* r = [RESTRequest requestWithURL:[NSURL URLWithString:@"test/"] type:RESTRequestTypePost bodyData:jsonData bodyType:RESTRequestBodyTypeFormUrlEncoded resourcePathComponents:@"sub1", @"sub2", @"sub3", nil];
-
-	[r addParam:@"v1" forKey:@"p1"];
-	[r addParam:@"v2" forKey:@"p2"];
-	
-	STAssertNotNil(r.serviceEndpoint, @"Endpoint is null!");
-	STAssertNotNil(r.resourcePath, @"Path is null!");
-	STAssertTrue(r.hasParams, @"No params!?");
-	STAssertNotNil([r body], @"No body");
-	STAssertEqualObjects(r.contentType, @"application/x-www-form-urlencoded", @"Content Type not ok");
-	STAssertEqualObjects(r.resourcePathString, @"sub1/sub2/sub3", @"Invalid resource path");
-	
-	
-	NSURLRequest* req = [r getUrlRequest];
-	STAssertNotNil(req, @"Invalid url request");
-	STAssertEqualObjects([[req URL] absoluteString], @"test/sub1/sub2/sub3", @"URL invalid");
 }
 
 @end

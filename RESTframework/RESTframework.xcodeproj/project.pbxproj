@@ -22,9 +22,9 @@
 		2C582ED9134B8029007CAC35 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C582ECF134B8029007CAC35 /* main.m */; };
 		2C582EDB134B8029007CAC35 /* RESTframeworkAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C582ED3134B8029007CAC35 /* RESTframeworkAppDelegate.m */; };
 		2C582EDC134B8029007CAC35 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C582ED5134B8029007CAC35 /* RootViewController.m */; };
-		2C582EE9134B80D9007CAC35 /* RESTRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C582EE4134B80D9007CAC35 /* RESTRequest.m */; };
-		2C582EEA134B80D9007CAC35 /* RESTResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C582EE6134B80D9007CAC35 /* RESTResponse.m */; };
-		2C582EEB134B80D9007CAC35 /* RESTSvc.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C582EE8134B80D9007CAC35 /* RESTSvc.m */; };
+		2C9F7DE71410CCEB00177C88 /* RFRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C9F7DE61410CCEB00177C88 /* RFRequest.m */; };
+		2CBD0AF01413E19A00A04C01 /* RFResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CBD0AEF1413E19A00A04C01 /* RFResponse.m */; };
+		2CBD0AF41413E3B200A04C01 /* RFService.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CBD0AF31413E3B200A04C01 /* RFService.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,12 +58,13 @@
 		2C582ED3134B8029007CAC35 /* RESTframeworkAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RESTframeworkAppDelegate.m; sourceTree = "<group>"; };
 		2C582ED4134B8029007CAC35 /* RootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
 		2C582ED5134B8029007CAC35 /* RootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
-		2C582EE3134B80D9007CAC35 /* RESTRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RESTRequest.h; sourceTree = "<group>"; };
-		2C582EE4134B80D9007CAC35 /* RESTRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RESTRequest.m; sourceTree = "<group>"; };
-		2C582EE5134B80D9007CAC35 /* RESTResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RESTResponse.h; sourceTree = "<group>"; };
-		2C582EE6134B80D9007CAC35 /* RESTResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RESTResponse.m; sourceTree = "<group>"; };
-		2C582EE7134B80D9007CAC35 /* RESTSvc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RESTSvc.h; sourceTree = "<group>"; };
-		2C582EE8134B80D9007CAC35 /* RESTSvc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RESTSvc.m; sourceTree = "<group>"; };
+		2C9F7DE51410CCEB00177C88 /* RFRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RFRequest.h; sourceTree = "<group>"; };
+		2C9F7DE61410CCEB00177C88 /* RFRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RFRequest.m; sourceTree = "<group>"; };
+		2CBD0AEE1413E19A00A04C01 /* RFResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RFResponse.h; sourceTree = "<group>"; };
+		2CBD0AEF1413E19A00A04C01 /* RFResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RFResponse.m; sourceTree = "<group>"; };
+		2CBD0AF21413E3B200A04C01 /* RFService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RFService.h; sourceTree = "<group>"; };
+		2CBD0AF31413E3B200A04C01 /* RFService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RFService.m; sourceTree = "<group>"; };
+		2CE0B3D91413B5E500775D13 /* RFconf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RFconf.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,7 +94,7 @@
 		2C582E7F134B7FC3007CAC35 = {
 			isa = PBXGroup;
 			children = (
-				2C582EDD134B802F007CAC35 /* RESTclasses */,
+				2C9F7DE31410CCD000177C88 /* RFClasses */,
 				2C582EC8134B8029007CAC35 /* Application */,
 				2C582EB4134B7FC3007CAC35 /* RESTframeworkTests */,
 				2C582E8D134B7FC3007CAC35 /* Frameworks */,
@@ -153,20 +154,6 @@
 			path = RESTframework/Application;
 			sourceTree = "<group>";
 		};
-		2C582EDD134B802F007CAC35 /* RESTclasses */ = {
-			isa = PBXGroup;
-			children = (
-				2C582EE3134B80D9007CAC35 /* RESTRequest.h */,
-				2C582EE4134B80D9007CAC35 /* RESTRequest.m */,
-				2C582EE5134B80D9007CAC35 /* RESTResponse.h */,
-				2C582EE6134B80D9007CAC35 /* RESTResponse.m */,
-				2C582EE7134B80D9007CAC35 /* RESTSvc.h */,
-				2C582EE8134B80D9007CAC35 /* RESTSvc.m */,
-			);
-			name = RESTclasses;
-			path = RESTframework/RESTclasses;
-			sourceTree = "<group>";
-		};
 		2C582EDE134B8038007CAC35 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
@@ -202,6 +189,21 @@
 				2C582ED5134B8029007CAC35 /* RootViewController.m */,
 			);
 			name = Views;
+			sourceTree = "<group>";
+		};
+		2C9F7DE31410CCD000177C88 /* RFClasses */ = {
+			isa = PBXGroup;
+			children = (
+				2CE0B3D91413B5E500775D13 /* RFconf.h */,
+				2C9F7DE51410CCEB00177C88 /* RFRequest.h */,
+				2C9F7DE61410CCEB00177C88 /* RFRequest.m */,
+				2CBD0AEE1413E19A00A04C01 /* RFResponse.h */,
+				2CBD0AEF1413E19A00A04C01 /* RFResponse.m */,
+				2CBD0AF21413E3B200A04C01 /* RFService.h */,
+				2CBD0AF31413E3B200A04C01 /* RFService.m */,
+			);
+			name = RFClasses;
+			path = RESTframework/RFClasses;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -249,7 +251,7 @@
 		2C582E81134B7FC3007CAC35 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				ORGANIZATIONNAME = MobileWasp;
+				ORGANIZATIONNAME = "Ivan Vasic https://github.com/ivasic/RESTframework";
 			};
 			buildConfigurationList = 2C582E84134B7FC3007CAC35 /* Build configuration list for PBXProject "RESTframework" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -315,9 +317,9 @@
 				2C582ED9134B8029007CAC35 /* main.m in Sources */,
 				2C582EDB134B8029007CAC35 /* RESTframeworkAppDelegate.m in Sources */,
 				2C582EDC134B8029007CAC35 /* RootViewController.m in Sources */,
-				2C582EE9134B80D9007CAC35 /* RESTRequest.m in Sources */,
-				2C582EEA134B80D9007CAC35 /* RESTResponse.m in Sources */,
-				2C582EEB134B80D9007CAC35 /* RESTSvc.m in Sources */,
+				2C9F7DE71410CCEB00177C88 /* RFRequest.m in Sources */,
+				2CBD0AF01413E19A00A04C01 /* RFResponse.m in Sources */,
+				2CBD0AF41413E3B200A04C01 /* RFService.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -415,6 +417,9 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "RESTframework/Application/RESTframework-Prefix.pch";
+				GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS = YES;
+				GCC_TREAT_INCOMPATIBLE_POINTER_TYPE_WARNINGS_AS_ERRORS = YES;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				INFOPLIST_FILE = "RESTframework/Application/RESTframework-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -429,6 +434,9 @@
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "RESTframework/Application/RESTframework-Prefix.pch";
+				GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS = YES;
+				GCC_TREAT_INCOMPATIBLE_POINTER_TYPE_WARNINGS_AS_ERRORS = YES;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				INFOPLIST_FILE = "RESTframework/Application/RESTframework-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
