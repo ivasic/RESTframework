@@ -199,9 +199,9 @@
 	}
 	
 	if (self.requestMethod != RFRequestMethodGet && bData && bData.length > 0) {
-		[urlRequest setValue:[NSString stringWithFormat:@"%d", [self.bodyData length]] forHTTPHeaderField:@"Content-Length"];
+		[urlRequest setValue:[NSString stringWithFormat:@"%d", [bData length]] forHTTPHeaderField:@"Content-Length"];
 		[urlRequest setValue:[RFRequest contentTypeToString:self.bodyContentType] forHTTPHeaderField:@"Content-Type"];
-		[urlRequest setHTTPBody:self.bodyData];
+		[urlRequest setHTTPBody:bData];
 	}
 	
 	return urlRequest;
