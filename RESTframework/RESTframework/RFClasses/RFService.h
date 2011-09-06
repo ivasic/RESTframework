@@ -67,21 +67,21 @@ typedef void (^RFRequestCompletion)(RFResponse* response);
 
 /*!
  * @property delegate
- * @abstract This is the pointer to RFServiceDelegate
+ * @abstract This is the pointer to @link RFServiceDelegate @/link
  */
 @property (assign) id<RFServiceDelegate> delegate;
 
 /*!
  * @method execRequest:
  * @abstract Adds the request to the queue for execution and executes it when the time comes
- * @param request RFRequest to be executed
+ * @param request @link RFRequest @/link to be executed
  */
 -(void) execRequest:(RFRequest*)request;
 
 /*!
  * @method execRequest:completion
- * @abstract Creates a RFService object and executes RFRequest async. Notifies about completion via completion block.
- * @param request RFRequest to be executed
+ * @abstract Creates a RFService object and executes @link RFRequest @/link async. Notifies about completion via completion block.
+ * @param request @link RFRequest @/link to be executed
  */
 +(void) execRequest:(RFRequest*)request completion:(RFRequestCompletion)completion;
 

@@ -8,6 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
+/*!
+ * @enum RFRequestMethod
+ * @abstract Specifies HTTP method for NSURLRequest
+ * @const RFRequestMethodGet GET HTTP method
+ * @const RFRequestMethodPost POST HTTP method
+ * @const RFRequestMethodPut PUT HTTP method
+ * @const RFRequestMethodDelete DELETE HTTP method
+ */
 typedef enum {
 	RFRequestMethodGet,
 	RFRequestMethodPost,
@@ -15,11 +23,21 @@ typedef enum {
 	RFRequestMethodDelete
 } RFRequestMethod;
 
+/*!
+ * @enum RFRequestBodyType
+ * @abstract Body type for NSURLRequest
+ * @const RFRequestBodyTypeFormUrlEncoded FormUrlEncoded
+ * @const RFRequestBodyTypeMultiPartFormData MultiPartFormData
+ */
 typedef enum {
     RFRequestBodyTypeFormUrlEncoded,
     RFRequestBodyTypeMultiPartFormData
 } RFRequestBodyType;
 
+/*!
+ * @class RFRequest
+ * @abstract RESTframework wrapper for NSURLRequest, passed to @link RFService @/link for execution
+ */
 @interface RFRequest : NSObject
 {
 	NSURL* serviceEndpoint;
@@ -45,7 +63,7 @@ typedef enum {
 
 /*!
  * @property requestMethod
- * @abstract REST request type, GET, POST, PUT or DELETE (RFRequestMethodGet, RFRequestMethodPost, RFRequestMethodPut, RFRequestMethodDelete)
+ * @abstract REST request type, GET, POST, PUT or DELETE (@link RFRequestMethodGet @/link, @link RFRequestMethodPost @/link, @link RFRequestMethodPut @/link, @link RFRequestMethodDelete @/link)
  */
 @property (nonatomic, assign) RFRequestMethod requestMethod;
 
@@ -69,7 +87,7 @@ typedef enum {
 
 /*!
  * @property hasParams
- * @abstract Helper, gets a BOOL indicating whether or not RFRequest has params
+ * @abstract Helper, gets a BOOL indicating whether or not @link RFRequest @/link has params
  */
 @property (readonly) BOOL hasParams;
 
@@ -87,13 +105,13 @@ typedef enum {
 
 /*!
  * @property bodyContentType
- * @abstract RFRequestBodyType ContentType of request body. Not used with GET nor if there's no bodyData. Default is: application/x-www-form-urlencoded RFRequestBodyTypeMultiPartFormData
+ * @abstract @link RFRequestBodyType @/link ContentType of request body. Not used with GET nor if there's no @link bodyData @/link. Default is: application/x-www-form-urlencoded @link RFRequestBodyTypeMultiPartFormData @/link
  */
 @property (nonatomic, assign) RFRequestBodyType bodyContentType;
 
 /*!
  * @property bodyData
- * @abstract Data send as HTTP request body. Not used if requestType is RFRequestMethodGet. If NIL NSURLRequest body will be set from params/data (@see addParam:forKey, @see addData:withContentType:forKey:). If set, this property takes precedence over params/data and will be sent as NSURLRequest body. 
+ * @abstract Data send as HTTP request body. Not used if requestType is @link RFRequestMethodGet @/link. If NIL NSURLRequest body will be set from params/data (See @link addParam:forKey: @/link, @link addData:withContentType:forKey: @/link). If set, this property takes precedence over params/data and will be sent as NSURLRequest body. 
  */
 @property (nonatomic, retain) NSData* bodyData;
 

@@ -26,7 +26,7 @@
 
 /*!
  * @property request
- * @abstract RFRequest used to obtain this RFResponse
+ * @abstract @link RFRequest @/link used to obtain this RFResponse
  */
 @property (nonatomic, readonly, retain) RFRequest* request;
 
