@@ -93,7 +93,7 @@ typedef enum {
 
 /*!
  * @property bodyData
- * @abstract Data send as HTTP request body. Not used if requestType is RFRequestMethodGet.
+ * @abstract Data send as HTTP request body. Not used if requestType is RFRequestMethodGet. If NIL NSURLRequest body will be set from params/data (@see addParam:forKey, @see addData:withContentType:forKey:). If set, this property takes precedence over params/data and will be sent as NSURLRequest body. 
  */
 @property (nonatomic, retain) NSData* bodyData;
 

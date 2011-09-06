@@ -19,7 +19,7 @@
 @interface RFRequest ()
 +(NSString*) requestMethodToString:(RFRequestMethod)t;
 +(NSString*) contentTypeToString:(RFRequestBodyType)bt;
--(void) constructBody;
+-(NSData*) constructBody;
 -(BOOL) paramIsKeyValue:(NSDictionary*)d;
 
 @property (nonatomic, retain) NSMutableArray* params;
@@ -192,10 +192,13 @@
 		}
 	}
 	
-	//construct body from internal params
-	[self constructBody];
+	//use pre-set body data OR construct body from internal params
+	NSData* bData = (self.bodyData && self.bodyData.length > 0) ? self.bodyData : [self constructBody];
+	if (self.bodyData && self.bodyData.length > 0 && self.hasParams) {
+		RFLogWarning(@"RFRequest has both bodyData set and params/data added");
+	}
 	
-	if (self.requestMethod != RFRequestMethodGet && self.bodyData && self.bodyData.length > 0) {
+	if (self.requestMethod != RFRequestMethodGet && bData && bData.length > 0) {
 		[urlRequest setValue:[NSString stringWithFormat:@"%d", [self.bodyData length]] forHTTPHeaderField:@"Content-Length"];
 		[urlRequest setValue:[RFRequest contentTypeToString:self.bodyContentType] forHTTPHeaderField:@"Content-Type"];
 		[urlRequest setHTTPBody:self.bodyData];
@@ -206,11 +209,13 @@
 
 #pragma mark - Private
 
--(void) constructBody
+-(NSData*) constructBody
 {
 	if (self.requestMethod == RFRequestMethodGet) {
-		return; //skip GET
+		return nil; //skip GET
 	}
+	
+	NSData* bData = nil;
 	
 	if (self.bodyContentType == RFRequestBodyTypeFormUrlEncoded) {
 		
@@ -226,10 +231,12 @@
 		}
 		
 		if (ps.count > 0) {
-			self.bodyData = [[ps componentsJoinedByString:@"&"] dataUsingEncoding:NSUTF8StringEncoding];
+			bData = [[ps componentsJoinedByString:@"&"] dataUsingEncoding:NSUTF8StringEncoding];
 		} else {
 			RFLogWarning(@"FormUrlEncoded request has no params");
 		}
+		
+		return bData;
 	}
 	else if(self.bodyContentType == RFRequestBodyTypeMultiPartFormData)
 	{
@@ -274,8 +281,10 @@
 		}
 		
 		if (data && data.length > 0) {
-			self.bodyData = data;
+			bData = data;
 		}
+		
+		return bData;
 	}
 /*	else if (self.bodyType == RESTRequestBodyTypeJSON) {
 		if ([self.params objectForKey:GS_BODY_DATA_KEY]) {
@@ -285,6 +294,7 @@
 	}*/
 	
 	RFLogError(@"Unknown body type encoding: %d", self.bodyContentType);
+	return nil;
 }
 
 +(NSString*) requestMethodToString:(RFRequestMethod)t
