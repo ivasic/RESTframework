@@ -7,17 +7,72 @@
 //
 
 #import "RootViewController.h"
+#import "RFService.h"
+#import "RFRequest.h"
+#import "RFResponse.h"
+
+#define flikrAPIKey @"98df480c51839e74ae553fd62e91b203"
+#define flikrLink @"http://api.flickr.com/"
 
 @implementation RootViewController
+@synthesize testEchoButton;
+@synthesize textField;
+@synthesize responseTextField;
+@synthesize scrollView;
+@synthesize sbar, searchText;
+
+- (void)searchImages {
+	RFRequest *r = [[RFRequest requestWithURL:[NSURL URLWithString:flikrLink] type:RFRequestMethodGet resourcePathComponents:@"services", @"rest", @"", nil] retain];
+	
+	[r addParam:@"flickr.photos.search" forKey:@"method"];
+	[r addParam:flikrAPIKey forKey:@"api_key"];
+	[r addParam:sbar.text forKey:@"tags"];
+	[r addParam:@"25" forKey:@"per_page"];
+	[r addParam:@"json" forKey:@"format"];
+	[r addParam:@"1" forKey:@"nojsoncallback"];
+	
+	[RFService execRequest:r completion:^(RFResponse *response){
+		NSLog(@"%@", r);
+		self.responseTextField.text = response.stringValue;
+	}];
+    [r release];
+}
+
+- (void)moveViewForKeyboard:(NSNotification *)info {
+	CGRect t = [[info.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+	t = CGRectMake(0, 0, 320, self.scrollView.frame.size.height - t.size.height);
+	self.scrollView.frame = t;
+	
+	if ([self.textField isFirstResponder]) {
+		[self.scrollView scrollRectToVisible:CGRectMake(self.testEchoButton.frame.origin.x, self.testEchoButton.frame.origin.y, self.testEchoButton.frame.size.width, self.testEchoButton.frame.size.height + 20) animated:YES];
+	}
+}
+
+- (void)removeViewForKeyboard:(NSNotification *)info {
+	self.scrollView.frame = self.view.bounds;
+}
 
 - (void)viewDidLoad
 {
 	[super viewDidLoad];
+	self.title = NSLocalizedString(@"", @"");
+	self.sbar.delegate = self;
+	self.textField.delegate = self;
+	self.scrollView.contentSize = self.scrollView.frame.size;
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+	
+	[[NSNotificationCenter defaultCenter] addObserver:self 
+											 selector:@selector(moveViewForKeyboard:) 
+												 name:UIKeyboardDidShowNotification
+											   object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self 
+											 selector:@selector(removeViewForKeyboard:) 
+												 name:UIKeyboardDidHideNotification
+											   object:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -27,97 +82,14 @@
 
 - (void)viewWillDisappear:(BOOL)animated
 {
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardDidShowNotification object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardDidHideNotification object:nil];
 	[super viewWillDisappear:animated];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
 {
 	[super viewDidDisappear:animated];
-}
-
-/*
- // Override to allow orientations other than the default portrait orientation.
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-	// Return YES for supported orientations.
-	return (interfaceOrientation == UIInterfaceOrientationPortrait);
-}
- */
-
-// Customize the number of sections in the table view.
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-	return 1;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-	return 0;
-}
-
-// Customize the appearance of table view cells.
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    static NSString *CellIdentifier = @"Cell";
-    
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
-    }
-
-	// Configure the cell.
-    return cell;
-}
-
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete)
-    {
-        // Delete the row from the data source.
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }
-    else if (editingStyle == UITableViewCellEditingStyleInsert)
-    {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    /*
-    <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-    // ...
-    // Pass the selected object to the new view controller.
-    [self.navigationController pushViewController:detailViewController animated:YES];
-    [detailViewController release];
-	*/
 }
 
 - (void)didReceiveMemoryWarning
@@ -130,6 +102,12 @@
 
 - (void)viewDidUnload
 {
+	self.sbar = nil;
+	self.searchText = nil;
+	[self setTestEchoButton:nil];
+	[self setResponseTextField:nil];
+	[self setTextField:nil];
+	[self setScrollView:nil];
     [super viewDidUnload];
 
     // Relinquish ownership of anything that can be recreated in viewDidLoad or on demand.
@@ -138,7 +116,69 @@
 
 - (void)dealloc
 {
+	self.sbar = nil;
+	self.searchText = nil;
+	[testEchoButton release];
+	[responseTextField release];
+	[textField release];
+	[scrollView release];
     [super dealloc];
+}
+
+#pragma mark - Search Bar Delegate
+
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
+	self.searchText = self.sbar.text;
+}
+
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
+    [self.sbar setShowsCancelButton:NO animated:YES];
+	[self.sbar resignFirstResponder];
+	
+	[self searchImages];
+}
+
+- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar {
+    [self.sbar setShowsCancelButton:YES animated:YES];
+}
+
+- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar {
+	self.searchText = self.sbar.text;
+}
+
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
+	[self.sbar setShowsCancelButton:NO animated:YES];
+	[self.sbar resignFirstResponder];
+}
+
+- (void)textFieldDidBeginEditing:(UITextField *)tField {
+	[self.textField becomeFirstResponder];
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)tField {
+	self.searchText = self.textField.text;
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+	[self.textField resignFirstResponder];
+	return NO;
+}
+
+- (IBAction)testEchoButtonClicked:(id)sender {
+	[self.textField resignFirstResponder];
+	RFRequest *r = [[RFRequest requestWithURL:[NSURL URLWithString:flikrLink] type:RFRequestMethodPost resourcePathComponents:@"services", @"rest", @"", nil] retain];
+
+	[r addParam:@"flickr.test.echo" forKey:@"method"];
+	[r addParam:flikrAPIKey forKey:@"api_key"];
+	[r addParam:@"json" forKey:@"format"];
+	[r addParam:@"1" forKey:@"nojsoncallback"];
+	[r addParam:self.textField.text forKey:@"test"];
+	
+	[RFService execRequest:r completion:^(RFResponse *response){
+		NSLog(@"%@", r);
+		self.responseTextField.text = response.stringValue;
+	}];
+    [r release];
 }
 
 @end

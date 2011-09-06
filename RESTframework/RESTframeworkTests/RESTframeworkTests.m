@@ -76,6 +76,51 @@
 -(void) testPOST
 {
 	//RFPostRequest
+	RFRequest* r = [[[RFRequest alloc] init] autorelease];
+	
+	STAssertNil(r.serviceEndpoint , @"Service Endpoint should be nil");	
+	STAssertNil(r.resourcePath, @"Resource path should be nil");
+	STAssertNil(r.additionalHTTPHeaders, @"Aditionals HTTP headers should be nil");
+	
+	r.serviceEndpoint = [NSURL URLWithString:@"http://dummy.url/path1/"];
+	r.resourcePath = [NSArray arrayWithObjects:@"sub1", @"sub2", @"sub 3", @"sub+4", @"sub&5", @"sub-6", @"sub%7", @"sub@8", @"sub!9", nil];
+	r.requestMethod = RFRequestMethodPost;
+	
+	//additional headers
+	r.additionalHTTPHeaders = [NSDictionary dictionaryWithObjectsAndKeys:@"v1", @"k1", @"v2", @"k2", nil];
+
+	STAssertFalse(r.hasParams, @"Request has params even though none added");
+	[r addParam:@"v1" forKey:@"k1"];
+	[r addParam:@"v2" forKey:@"k2"];
+	[r addParam:@"v3" forKey:@"k3"];
+	[r addParam:@"v 4" forKey:@"k 4"];
+	[r addParam:@"v+5" forKey:@"k+5"];
+	[r addParam:@"v%6" forKey:@"k%6"];
+	[r addParam:@"v&7" forKey:@"k&7"];
+	STAssertTrue(r.hasParams, @"Request doesn't have params even though added");
+	
+	NSData *d = [[NSData alloc] initWithData:[@"qdwdqdqwdqwd" dataUsingEncoding:NSUTF8StringEncoding]];
+	[r addData:d withContentType:@"application/junk" forKey:@"junkData"];
+	
+	r.bodyData = d;
+
+	NSURL* url = [r URL];
+	NSURLRequest* urlReq = [r urlRequest];
+
+	STAssertTrue(r.hasParams, @"Request doesn't have params even though added");
+	STAssertNotNil([urlReq HTTPBody], @"Should have body");
+	STAssertEqualObjects([urlReq HTTPBody], d, @"Bodies shoud be same");
+	
+	STAssertEqualObjects(url, [urlReq URL], @"URL's don't match");
+	STAssertEqualObjects(urlReq.HTTPMethod, @"POST", @"Invalid HTTP method");
+	STAssertEquals(r.requestMethod, RFRequestMethodPost, @"Invalid request type");
+	STAssertTrue(r.additionalHTTPHeaders.count == 2, @"Additional headers count");
+
+	STAssertEqualObjects([urlReq valueForHTTPHeaderField:@"Accept"], @"*/*", @"Invalid Accept HTTP field");
+	STAssertNil([r acceptsContentType], @"Different Accept");
+	r.acceptsContentType = @"my/type";
+	urlReq = [r urlRequest];
+	STAssertEqualObjects([urlReq valueForHTTPHeaderField:@"Accept"], @"my/type", @"Invalid Accept HTTP field");
 }
 
 -(void) testRequestTypes
@@ -151,7 +196,6 @@
 	STAssertNil(r.bodyData, @"No custom body data assigned yet the property holds some value?");
 	
 	NSURLRequest* req = [r urlRequest];
-	STAssertNotNil(r.bodyData, @"Non-GET request should have bodyData after urlRequest is called");
 	STAssertNotNil(req, @"Invalid url request");
 	STAssertEqualObjects([[req URL] absoluteString], @"test/sub1/sub2", @"URL invalid");
 	STAssertEqualObjects([req valueForHTTPHeaderField:@"Content-Type"], @"application/x-www-form-urlencoded", @"Invalid content type");
