@@ -24,18 +24,7 @@
 	// Add the navigation controller's view to the window and display.
 	self.window.rootViewController = self.navigationController;
 	[self.window makeKeyAndVisible];
-	
-	
-	RFRequest* r = [RFRequest requestWithURL:[NSURL URLWithString:@"http://api.flickr.com/services/rest"] type:RFRequestMethodGet resourcePathComponents:@"", nil];
-	//?method=flickr.test.echo&name=value&format=json
-	[r addParam:@"flickr.test.echo" forKey:@"method"];
-	[r addParam:@"value" forKey:@"name"];
-	[r addParam:@"json" forKey:@"format"];
-	
-	[RFService execRequest:r completion:^(RFResponse* response){
-		NSLog(@"%@", response);
-	}];
-	
+
     return YES;
 }
 
