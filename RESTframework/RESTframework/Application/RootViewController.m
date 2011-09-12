@@ -11,7 +11,7 @@
 #import "RFRequest.h"
 #import "RFResponse.h"
 
-#define flikrAPIKey @""
+#define flikrAPIKey @"ENTER_YOUR_FLICKR_KEY"
 #define flikrLink @"http://api.flickr.com/"
 
 @implementation RootViewController
