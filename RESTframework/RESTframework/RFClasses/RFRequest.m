@@ -31,7 +31,7 @@
 
 @interface RFRequest ()
 +(NSString*) requestMethodToString:(RFRequestMethod)t;
-+(NSString*) contentTypeToString:(RFRequestBodyType)bt;
+-(NSString*) contentTypeToString:(RFRequestBodyType)bt;
 -(NSData*) constructBody;
 -(BOOL) paramIsKeyValue:(NSDictionary*)d;
 
@@ -48,6 +48,7 @@
 @synthesize hasParams;
 @synthesize bodyData;
 @synthesize bodyContentType;
+@synthesize rawBytesBodyContentType;
 @synthesize tag;
 
 - (id)init
@@ -213,7 +214,7 @@
 	
 	if (self.requestMethod != RFRequestMethodGet && bData && bData.length > 0) {
 		[urlRequest setValue:[NSString stringWithFormat:@"%d", [bData length]] forHTTPHeaderField:@"Content-Length"];
-		[urlRequest setValue:[RFRequest contentTypeToString:self.bodyContentType] forHTTPHeaderField:@"Content-Type"];
+		[urlRequest setValue:[self contentTypeToString:self.bodyContentType] forHTTPHeaderField:@"Content-Type"];
 		[urlRequest setHTTPBody:bData];
 	}
 	
@@ -327,7 +328,7 @@
 	}
 }
 
-+(NSString*) contentTypeToString:(RFRequestBodyType)bt
+-(NSString*) contentTypeToString:(RFRequestBodyType)bt
 {
 	switch (bt) {
 		case RFRequestBodyTypeFormUrlEncoded:
@@ -336,6 +337,10 @@
 			return [NSString stringWithFormat:@"multipart/form-data; boundary=%@", kRFPostBoundary];
 			/*case RESTRequestBodyTypeJSON:
 			 return @"application/json";*/
+		case RFRequestBodyTypeRawBytes:
+			if (!self.rawBytesBodyContentType || self.rawBytesBodyContentType.length == 0) 
+				RFLogError(@"RFRequest body content type set to RFRequestBodyTypeRawBytes but rawBytesBodyContentType is NULL");
+			return self.rawBytesBodyContentType;
 		default:
 			break;
 	}

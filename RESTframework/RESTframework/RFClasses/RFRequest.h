@@ -41,10 +41,12 @@ typedef enum {
  * @abstract Body type for NSURLRequest
  * @const RFRequestBodyTypeFormUrlEncoded FormUrlEncoded
  * @const RFRequestBodyTypeMultiPartFormData MultiPartFormData
+ * @const RFRequestBodyTypeRawBytes use this for any other body content type in combination with @link rawBytesBodyContentType @/link
  */
 typedef enum {
     RFRequestBodyTypeFormUrlEncoded,
-    RFRequestBodyTypeMultiPartFormData
+    RFRequestBodyTypeMultiPartFormData,
+	RFRequestBodyTypeRawBytes
 } RFRequestBodyType;
 
 /*!
@@ -121,6 +123,14 @@ typedef enum {
  * @abstract @link RFRequestBodyType @/link ContentType of request body. Not used with GET nor if there's no @link bodyData @/link. Default is: application/x-www-form-urlencoded @link RFRequestBodyTypeMultiPartFormData @/link
  */
 @property (nonatomic, assign) RFRequestBodyType bodyContentType;
+
+/*!
+ * @property rawBytesBodyContentType
+ * @abstract Set this when @link bodyContentType @/link is @link RFRequestBodyTypeRawBytes @/link. It is ignored if otherwise. Not used with GET nor if there's no @link bodyData @/link.
+ * @discussion When @link bodyContentType @/link is @link RFRequestBodyTypeRawBytes @/link, you can set this property to match the @link bodyData @/link content type (e.g. 'application/xml' or 'application/json' or anything else).
+ */
+@property (nonatomic, retain) NSString* rawBytesBodyContentType;
+
 
 /*!
  * @property bodyData
