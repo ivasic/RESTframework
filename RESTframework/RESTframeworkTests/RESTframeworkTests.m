@@ -201,6 +201,27 @@
 	STAssertEqualObjects([req valueForHTTPHeaderField:@"Content-Type"], @"application/x-www-form-urlencoded", @"Invalid content type");
 	
 	STAssertTrue([[req HTTPBody] length] == 11, @"Invalid HTTP body, daata length should be 11 bytes instead of %d", [[req HTTPBody] length]);
+}
+
+
+- (void)testPostRequestBodyType
+{
+	RFRequest* r = [RFRequest requestWithURL:[NSURL URLWithString:@"test/"] type:RFRequestMethodPost bodyContentType:RFRequestBodyTypeRawBytes resourcePathComponents:@"sub1", @"sub2", nil];	
+	[r addParam:@"v1" forKey:@"p1"];
+	[r addParam:@"v2" forKey:@"p2"];
+	NSString *xmlDataString = @"<Node>data</Node>";
+	r.bodyData = [xmlDataString dataUsingEncoding:NSUTF8StringEncoding];
+	r.rawBytesBodyContentType = @"application/xml";
+	STAssertNotNil(r.serviceEndpoint, @"Endpoint is null!");
+	STAssertNotNil(r.resourcePath, @"Path is null!");
+	STAssertNotNil(r.bodyData, @"No custom body data assigned yet the property holds some value?");
+	STAssertTrue(r.hasParams, @"No params!?");
+	
+	NSURLRequest* req = [r urlRequest];
+	STAssertEqualObjects([[req URL] absoluteString], @"test/sub1/sub2", @"URL invalid");
+	NSString *httpData = [[NSString alloc] initWithData:[req HTTPBody] encoding:NSUTF8StringEncoding];
+	STAssertEqualObjects(httpData, xmlDataString, @"Data don't match");
+	
 	
 }
 
