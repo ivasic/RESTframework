@@ -24,6 +24,7 @@
 
 #define kRFRequestParamKey @"kRFRequestParamKey"
 #define kRFRequestParamValue @"kRFRequestParamValue"
+#define kRFRequestParamEncoded @"kRFRequestParamEncoded"
 #define kRFRequestParamMIME @"kRFRequestParamMIME"
 
 
@@ -131,12 +132,17 @@
 
 #pragma mark - Methods
 
--(void) addParam:(NSString*)value forKey:(NSString*)key {
+-(void) addParam:(NSString*)value forKey:(NSString*)key
+{
+	[self addParam:value forKey:key alreadyEncoded:NO];
+}
+
+-(void) addParam:(NSString*)value forKey:(NSString*)key alreadyEncoded:(BOOL)encoded {
 	if (!self.params) {
 		params = [[NSMutableArray array] retain];
 	}
 	
-	NSDictionary* pd = [NSDictionary dictionaryWithObjectsAndKeys:key, kRFRequestParamKey, value, kRFRequestParamValue, nil];
+	NSDictionary* pd = [NSDictionary dictionaryWithObjectsAndKeys:key, kRFRequestParamKey, value, kRFRequestParamValue, [NSNumber numberWithBool:encoded], kRFRequestParamEncoded, nil];
 	
 	//add param
 	[self.params addObject:pd];
@@ -169,13 +175,17 @@
 				continue;
 			}
 			
+			BOOL isEncoded = [[p objectForKey:kRFRequestParamEncoded] boolValue];
+			NSString* pKey = isEncoded ? [p objectForKey:kRFRequestParamKey] : [[p objectForKey:kRFRequestParamKey] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+			NSString* pValue = isEncoded ? [p objectForKey:kRFRequestParamValue] : [[p objectForKey:kRFRequestParamValue] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+			
 			if(first) {
-				str = [str stringByAppendingFormat:@"%@=%@", [[p objectForKey:kRFRequestParamKey] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], [[p objectForKey:kRFRequestParamValue] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
 				first = NO;
-				continue;
+			} else {
+				str = [str stringByAppendingString:@"&"];
 			}
 			
-			str = [str stringByAppendingFormat:@"&%@=%@", [[p objectForKey:kRFRequestParamKey] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], [[p objectForKey:kRFRequestParamValue] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+			str = [str stringByAppendingFormat:@"%@=%@", pKey, pValue];
 		}
 		
 		urlString = [urlString stringByAppendingString:str];

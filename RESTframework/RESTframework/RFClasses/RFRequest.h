@@ -113,6 +113,12 @@ typedef enum {
 -(void) addParam:(NSString*)value forKey:(NSString*)key;
 
 /*!
+ * @method addParam:forKey:alreadyEncoded:
+ * @abstract Adds string param to request. If both value AND key are URL encoded pass YES for alreadyEncoded.
+ */
+-(void) addParam:(NSString*)value forKey:(NSString*)key alreadyEncoded:(BOOL)encoded;
+
+/*!
  * @method addData:withContentType:forKey:
  * @abstract Adds data (e.g. file) with specified MIME type for specified key
  */

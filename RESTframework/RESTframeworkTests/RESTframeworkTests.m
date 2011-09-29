@@ -225,4 +225,33 @@
 	
 }
 
+
+-(void) testGETWithDateChars
+{
+	RFRequest* r = [[[RFRequest alloc] init] autorelease];
+	r.serviceEndpoint = [NSURL URLWithString:@"http://dummy.url/path1/"];
+	r.resourcePath = [NSArray arrayWithObjects:@"sub1", nil];
+	
+	NSDate* d = [NSDate date];
+	NSDateFormatter* df = [[[NSDateFormatter alloc] init] autorelease];
+	df.dateStyle = NSDateFormatterShortStyle;
+	
+	NSString* date = [[df stringFromDate:d] stringByAppendingString:@" 15:22h"];
+	NSLog(@"%@", date);
+	NSLog(@"%@", [date stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]);
+	[r addParam:date forKey:@"date1 1"];
+	STAssertEqualObjects([[[r urlRequest] URL] absoluteString], @"http://dummy.url/path1/sub1?date1%201=9/29/11%2015:22h", @"Param not encoded properly?");
+	NSLog(@"%@", [[r urlRequest] URL]);
+	
+	//now the same but encoded
+	r = [[[RFRequest alloc] init] autorelease];
+	r.serviceEndpoint = [NSURL URLWithString:@"http://dummy.url/path1/"];
+	r.resourcePath = [NSArray arrayWithObjects:@"sub1", nil];
+	date = [[df stringFromDate:d] stringByAppendingString:@"%2015:22h"];
+	[r addParam:date forKey:@"date1%201" alreadyEncoded:YES];
+	STAssertEqualObjects([[[r urlRequest] URL] absoluteString], @"http://dummy.url/path1/sub1?date1%201=9/29/11%2015:22h", @"Param not encoded properly?");
+	
+	
+}
+
 @end
