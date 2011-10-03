@@ -95,8 +95,9 @@ typedef void (^RFRequestCompletion)(RFResponse* response);
  * @method execRequest:completion
  * @abstract Creates a RFService object and executes @link RFRequest @/link async. Notifies about completion via completion block.
  * @param request @link RFRequest @/link to be executed
+ * @return RFService instance (use it to e.g. cancel the request)
  */
-+(void) execRequest:(RFRequest*)request completion:(RFRequestCompletion)completion;
++(RFService*) execRequest:(RFRequest*)request completion:(RFRequestCompletion)completion;
 
 /*!
  * @method cancelRequests

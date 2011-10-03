@@ -198,13 +198,15 @@
 
 #pragma mark - Class Methods
 
-+(void) execRequest:(RFRequest*)request completion:(RFRequestCompletion)completion
++(RFService*) execRequest:(RFRequest*)request completion:(RFRequestCompletion)completion
 {
 	RFService* svc = [[[RFService alloc] init] autorelease];
 	svc.delegate = svc;
 	svc.asyncDelegate = svc;
 	svc.asyncCompletionBlock = completion;
 	[svc execRequest:request];
+	
+	return svc;
 }
 
 #pragma mark - SVC delegate
