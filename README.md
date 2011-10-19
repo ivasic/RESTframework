@@ -7,6 +7,8 @@ RESTframework is a lightweight Cocoa framework for working with RESTful web serv
 
 To start, simply copy all files from RFClasses directory into your Xcode project. Build & make sure you get no errors. Now simply import RFRequest.h, RFResponse.h and RFService.h and you're ready to roll.
 
+Xcode project also comes with a simple Flickr demo for echoing input and searching.
+
 ## Examples
 
 ### GET example
