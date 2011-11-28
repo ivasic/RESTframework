@@ -60,6 +60,16 @@ typedef void (^RFRequestCompletion)(RFResponse* response);
  */
 -(void) restService:(RFService*)svc loadedData:(NSUInteger)bytes;
 
+/*!
+ * @method restService:sentData:
+ * @abstract This method notifies the delegate how much data has been sent in total (bytes).
+ * @discussion If the delegate implements this method, it will be notified with the amount of data the service sent since start. It's a good place to implement a progress view to show the user how many bytes are sent.
+ * @param svc The RFService service
+ * @param bytes NSUInteger number of data bytes sent since the request started executing
+ * @param totalBytesExpected NSUInteger number of data bytes the service expects to send (can vary)
+ */
+-(void) restService:(RFService*)svc sentData:(NSUInteger)bytes totalBytesExpectedToSend:(NSUInteger)totalBytesExpected;
+
 @end
 
 

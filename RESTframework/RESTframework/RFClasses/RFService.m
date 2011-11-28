@@ -160,6 +160,13 @@
 	}
 }
 
+- (void)connection:(NSURLConnection *)connection didSendBodyData:(NSInteger)bytesWritten totalBytesWritten:(NSInteger)totalBytesWritten totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite
+{
+	if (self.delegate && [self.delegate respondsToSelector:@selector(restService:sentData:totalBytesExpectedToSend:)]) {
+		[self.delegate restService:self sentData:totalBytesWritten totalBytesExpectedToSend:totalBytesExpectedToWrite];
+	}
+}
+
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
 	[webData release];
 	webData = nil;
