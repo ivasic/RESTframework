@@ -110,6 +110,14 @@ typedef void (^RFRequestCompletion)(RFResponse* response);
 +(RFService*) execRequest:(RFRequest*)request completion:(RFRequestCompletion)completion;
 
 /*!
+ * @method execRequest:completion:dataReceived:dataSending:
+ * @abstract Creates a RFService object and executes @link RFRequest @/link async. Notifies about completion via completion block.
+ * @param request @link RFRequest @/link to be executed
+ * @return RFService instance (use it to e.g. cancel the request)
+ */
++(RFService*) execRequest:(RFRequest*)request completion:(RFRequestCompletion)completion dataReceived:(void(^)(NSUInteger totalBytesReceived))dataReceivedBlock dataSent:(void(^)(NSUInteger totalBytesSent, NSUInteger totalBytesExpected))dataSentBlock;
+
+/*!
  * @method cancelRequests
  * @abstract Cancels all the asynchronous REST HTTP requests in queue and releases all used resources
  */

@@ -29,6 +29,8 @@
 @property (readonly) NSMutableArray* requestsQueue;
 @property (retain) id<RFServiceDelegate> asyncDelegate;
 @property (copy) RFRequestCompletion asyncCompletionBlock;
+@property (copy) void(^dataReceivedlock)(NSUInteger totalBytesReceived);
+@property (copy) void(^dataSentBlock)(NSUInteger totalBytesSent, NSUInteger totalBytesExpected);
 @end
 
 @interface RFService (privates)
@@ -36,7 +38,7 @@
 @end
 
 @implementation RFService
-@synthesize delegate, currentRequest, requestsQueue, asyncDelegate, asyncCompletionBlock;
+@synthesize delegate, currentRequest, requestsQueue, asyncDelegate, asyncCompletionBlock, dataReceivedlock, dataSentBlock;
 
 #pragma mark - Props
 
@@ -59,6 +61,8 @@
 	self.delegate = nil;
 	self.asyncDelegate = nil;
 	self.asyncCompletionBlock = nil;
+	self.dataSentBlock = nil;
+	self.dataReceivedlock = nil;
 	[webData release];
 	[urlConnection release];
 	[super dealloc];
@@ -216,6 +220,19 @@
 	return svc;
 }
 
++(RFService*) execRequest:(RFRequest*)request completion:(RFRequestCompletion)completion dataReceived:(void(^)(NSUInteger totalBytesReceived))dataReceivedBlock dataSent:(void(^)(NSUInteger totalBytesSent, NSUInteger totalBytesExpected))dataSentBlock
+{
+	RFService* svc = [[[RFService alloc] init] autorelease];
+	svc.delegate = svc;
+	svc.asyncDelegate = svc;
+	svc.asyncCompletionBlock = completion;
+	svc.dataReceivedlock = dataReceivedBlock;
+	svc.dataSentBlock = dataSentBlock;
+	[svc execRequest:request];
+	
+	return svc;
+}
+
 #pragma mark - SVC delegate
 
 -(void) restService:(RFService *)svc didFinishWithResponse:(RFResponse *)response
@@ -224,4 +241,19 @@
 	self.asyncCompletionBlock = nil;
 	self.asyncDelegate = nil;
 }
+
+-(void) restService:(RFService *)svc loadedData:(NSUInteger)bytes
+{
+	if (self.dataReceivedlock) {
+		self.dataReceivedlock(bytes);
+	}
+}
+
+-(void) restService:(RFService *)svc sentData:(NSUInteger)bytes totalBytesExpectedToSend:(NSUInteger)totalBytesExpected
+{
+	if (self.dataSentBlock) {
+		self.dataSentBlock(bytes, totalBytesExpected);
+	}
+}
+
 @end
