@@ -24,8 +24,8 @@ RFRequest *r = [RFRequest requestWithURL:[NSURL URLWithString:@"http://myapi.exa
 
 //now execute this request and fetch the response in a block
 [RFService execRequest:r completion:^(RFResponse *response) {
-  NSLog(@"%@", r); //print out full response
-  NSLog(@"%@", r.dataValue); //dataValue is received response as NSData (e.g. you can do [r.dataValue objectFromJSONData])
+  NSLog(@"%@", response); //print out full response
+  NSLog(@"%@", response.dataValue); //dataValue is received response as NSData (e.g. you can do [response.dataValue objectFromJSONData])
 }];
 ```
 
@@ -34,15 +34,15 @@ RFRequest *r = [RFRequest requestWithURL:[NSURL URLWithString:@"http://myapi.exa
 To POST application/x-www-form-urlencoded data to a resource at URL that looks like http://myapi.example/api/v1/resources, we would do the following.
 
 ```objc
-RFRequest *r = [RFRequest requestWithURL:[NSURL URLWithString:@"http://myapi.example/"] type:RFRequestMethodGet resourcePathComponents:@"api", @"v1", @"resources", nil];
+RFRequest *r = [RFRequest requestWithURL:[NSURL URLWithString:@"http://myapi.example/"] type:RFRequestMethodPost resourcePathComponents:@"api", @"v1", @"resources", nil];
 
 [r addParam:@"2" forKey:@"param1"];
 [r addParam:@"test" forKey:@"param2"];
 
 //now execute this request and fetch the response in a block
 [RFService execRequest:r completion:^(RFResponse *response){
-	NSLog(@"%@", r); //print out full response
-	NSLog(@"%@", r.dataValue); //dataValue is received response as NSData (e.g. you can do [r.dataValue objectFromJSONData])
+	NSLog(@"%@", response); //print out full response
+	NSLog(@"%@", response.dataValue); //dataValue is received response as NSData (e.g. you can do [response.dataValue objectFromJSONData])
 }];
 ```
 
