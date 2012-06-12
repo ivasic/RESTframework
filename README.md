@@ -9,6 +9,11 @@ To start, simply copy all files from RFClasses directory into your Xcode project
 
 Xcode project also comes with a simple Flickr demo for echoing input and searching.
 
+### ARC
+
+RESTframework classes are (still) non-ARC classes for compatibility with older Xcode versions. This will probably change in the near future.
+In order to use RESTframework in your ARC project use **-fno-objc-arc** flag in "Build Phases" > "Compile Sources" section (http://f.cl.ly/items/2V0y3k2D0r2N2P2l1h44/no-ARC.png)
+
 ## Examples
 
 ### GET example
