@@ -265,7 +265,7 @@
 	else if(self.bodyContentType == RFRequestBodyTypeMultiPartFormData)
 	{
 		NSMutableData* data = [NSMutableData data];
-		NSData* crlf = [[NSString stringWithString:@"\r\n"] dataUsingEncoding:NSUTF8StringEncoding];
+		NSData* crlf = [@"\r\n" dataUsingEncoding:NSUTF8StringEncoding];
 		
 		//plain params
 		for (NSDictionary* pd in self.params) {
@@ -310,12 +310,26 @@
 		
 		return bData;
 	}
-/*	else if (self.bodyType == RESTRequestBodyTypeJSON) {
-		if ([self.params objectForKey:GS_BODY_DATA_KEY]) {
-			return [self.params objectForKey:GS_BODY_DATA_KEY];
+	else if (self.bodyContentType == RFRequestBodyTypeJSON) {
+		NSMutableDictionary* ps = [NSMutableDictionary dictionary];
+		for (NSDictionary* pd in self.params) {
+			
+			//strip out non-key value params (e.g. files, data...)
+			if (![self paramIsKeyValue:pd]) {
+				continue;
+			}
+			
+			[ps setObject:[pd objectForKey:kRFRequestParamValue] forKey:[pd objectForKey:kRFRequestParamKey]];
 		}
-		NSAssert(NO, @"Invalid Request body");
-	}*/
+		
+		if (ps.count > 0) {
+			bData = [NSJSONSerialization dataWithJSONObject:ps options:0 error:nil];
+		} else {
+			RFLogWarning(@"FormUrlEncoded request has no params");
+		}
+		
+		return bData;
+	}
 	
 	RFLogError(@"Unknown body type encoding: %d", self.bodyContentType);
 	return nil;
@@ -345,8 +359,8 @@
 			return @"application/x-www-form-urlencoded";
 		case RFRequestBodyTypeMultiPartFormData:
 			return [NSString stringWithFormat:@"multipart/form-data; boundary=%@", kRFPostBoundary];
-			/*case RESTRequestBodyTypeJSON:
-			 return @"application/json";*/
+		case RFRequestBodyTypeJSON:
+			 return @"application/json";
 		case RFRequestBodyTypeRawBytes:
 			if (!self.rawBytesBodyContentType || self.rawBytesBodyContentType.length == 0) 
 				RFLogError(@"RFRequest body content type set to RFRequestBodyTypeRawBytes but rawBytesBodyContentType is NULL");

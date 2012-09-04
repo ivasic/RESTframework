@@ -46,6 +46,7 @@ typedef enum {
 typedef enum {
     RFRequestBodyTypeFormUrlEncoded,
     RFRequestBodyTypeMultiPartFormData,
+	RFRequestBodyTypeJSON,
 	RFRequestBodyTypeRawBytes
 } RFRequestBodyType;
 
