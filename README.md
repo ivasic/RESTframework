@@ -1,3 +1,5 @@
+### RESTframework is no longer maintained and has been deprecated in favor of AFNetworking which is de facto standard these days.
+
 # Introduction
 
 RESTframework is a lightweight Cocoa framework for working with RESTful web services. It's designed for simplicity rather than robustness. Although it will be enhanced in time with more and more features, simplicity of usage will be kept priority. RESTframework supports GET, POST, PUT and DELETE HTTP verbs wrapped in a simple interface keeping the implementation abstract. 
