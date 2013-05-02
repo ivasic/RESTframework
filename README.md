@@ -1,4 +1,4 @@
-### RESTframework is no longer maintained and has been deprecated in favor of AFNetworking which is de facto standard these days.
+##### RESTframework is no longer actively maintained and has been deprecated in favor of AFNetworking which is de facto standard these days.
 
 # Introduction
 
